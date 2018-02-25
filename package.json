@@ -1,0 +1,32 @@
+{
+  "name": "tahanan",
+  "version": "1.0.0",
+  "description": "Tahanan Social Media App by Joan Lao",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrianmarkperea/tahanan.git"
+  },
+  "keywords": [
+    "foreigners",
+    "social_media",
+    "memories"
+  ],
+  "author": "Adrian Mark Perea",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adrianmarkperea/tahanan/issues"
+  },
+  "homepage": "https://github.com/adrianmarkperea/tahanan#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "morgan": "^1.9.0",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.33.4"
+  }
+}
