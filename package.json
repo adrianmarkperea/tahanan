@@ -4,6 +4,7 @@
   "description": "Tahanan Social Media App by Joan Lao",
   "main": "app.js",
   "scripts": {
+    "start:dev": "node-dev ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
