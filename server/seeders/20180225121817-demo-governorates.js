@@ -5,30 +5,29 @@ module.exports = {
     return queryInterface.bulkInsert('Governorates',
       [
         {
-            name: "gAAA",
-            createdAt: new Date(),
-            updatedAt: new Date()
+          id: "CAP",
+          name: "Capital",
+          createdAt: new Date(),
+          updatedAt: new Date()
         },
         {
-            name: "gBBB",
-            createdAt: new Date(),
-            updatedAt: new Date()
+          id: "MUH",
+          name: "Muharraq",
+          createdAt: new Date(),
+          updatedAt: new Date()
         },
         {
-            name: "gCCC",
-            createdAt: new Date(),
-            updatedAt: new Date()
+          id: "NOR",
+          name: "North",
+          createdAt: new Date(),
+          updatedAt: new Date()
         },
         {
-            name: "gDDD",
-            createdAt: new Date(),
-            updatedAt: new Date()
-        },
-        {
-            name: "gEEE",
-            createdAt: new Date(),
-            updatedAt: new Date()
-        },
+          id: "SOU",
+          name: "South",
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
       ],
     {});
   },

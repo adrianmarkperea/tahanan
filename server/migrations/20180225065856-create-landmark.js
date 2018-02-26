@@ -4,8 +4,8 @@ module.exports = {
     return queryInterface.createTable('Landmarks', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
         type: Sequelize.INTEGER
       },
       name: {
@@ -20,7 +20,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       cityId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         references: {
           model: 'Cities',
           key: 'id'
