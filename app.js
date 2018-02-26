@@ -19,7 +19,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./server/config/passport')(passport);
-
 require('./server/routes')(app, passport);
 
 app.get('*', (req, res) => {

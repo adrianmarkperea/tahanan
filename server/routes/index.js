@@ -1,15 +1,15 @@
-var cities       = require('./cities.js');
-var governorates = require('./governorates');
-var landmarks    = require('./landmarks');
-var memories     = require('./memories');
-var users        = require('./users');
-
 module.exports = (app, passport) => {
-  // TODO: Fix this
-  require('./auth')(app, passport);
+  const cities       = require('./cities.js');
+  const governorates = require('./governorates');
+  const landmarks    = require('./landmarks');
+  const memories     = require('./memories');
+  const users        = require('./users');
+  const auth         = require('./auth')(app, passport);
+
   app.use('/api/cities', cities);
   app.use('/api/governorates', governorates);
   app.use('/api/landmarks', landmarks);
   app.use('/api/memories', memories);
   app.use('/api/users', users);
+  app.use('/api/auth', auth);
 }

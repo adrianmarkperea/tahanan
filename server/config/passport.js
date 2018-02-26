@@ -2,6 +2,11 @@ const LocalStrategy = require('passport-local').Strategy;
 const verifier = require('../../libs/verifier');
 const User = require('../models').User;
 
+// 001: user does not exist
+// 002: user already exists
+// 003: missing fields
+// 004: wrong password
+
 module.exports = (passport) => {
 
   passport.serializeUser(function(user, done) {
@@ -26,6 +31,14 @@ module.exports = (passport) => {
       passReqToCallback: true
     },
     (req, email, password, done) => {
+
+      if (!email || !password) {
+        return done(null, false, {
+          errorCode: '003',
+          message: 'missing fields'
+        });
+      }
+
       User.findOne({
         where: {
           email: email
@@ -33,12 +46,19 @@ module.exports = (passport) => {
       }).then(user => {
         if (!user) {
           console.log(`User with email ${email} does not exist`);
-          return done(null, false);
+          return done(null, false, {
+            errorCode: '001',
+            message: 'user does not exist'
+          });
         }
 
         if (verifier.verifyPassword(user.salt, password, user.password)) {
-          console.log('User successfully authenticated');
           return done(null, user);
+        } else {
+          return done(null, false, {
+            errorCode: '004',
+            message: 'wrong password'
+          });
         }
       })
     })
@@ -50,14 +70,24 @@ module.exports = (passport) => {
       passReqToCallback: true
     },
     function (req, email, password, done) {
+      var first_name = req.body.first_name;
+      var last_name  = req.body.last_name;
+      if (!first_name || !last_name || !email || !password) {
+        return done(null, false, {
+          errorCode: '003',
+          message: 'missing fields'
+        });
+      }
       User.findOne({
         where: {
           email: email
         }
       }).then(user => {
         if (user) {
-          console.log(`User with ${username} already exists`);
-          return done(null, false);
+          return done(null, false, {
+            errorCode: '002',
+            message: 'user already exists'
+          });
         }
         var encryptedPassword = verifier.saltHashPassword(password);
         return User
@@ -65,7 +95,6 @@ module.exports = (passport) => {
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             email: email,
-            bio: req.body.bio,
             password: encryptedPassword.passwordHash,
             salt: encryptedPassword.salt,
             profile_pic_url: 'something something'
