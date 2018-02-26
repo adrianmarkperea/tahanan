@@ -16,7 +16,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      username: {
+      bio: {
+        type: Sequelize.STRING
+      },
+      email: {
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -24,7 +27,8 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      bio: {
+      salt: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       profile_pic_url: {

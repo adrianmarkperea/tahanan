@@ -4,7 +4,9 @@ var landmarks    = require('./landmarks');
 var memories     = require('./memories');
 var users        = require('./users');
 
-module.exports = (app) => {
+module.exports = (app, passport) => {
+  // TODO: Fix this
+  require('./auth')(app, passport);
   app.use('/api/cities', cities);
   app.use('/api/governorates', governorates);
   app.use('/api/landmarks', landmarks);
