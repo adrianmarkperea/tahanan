@@ -4,28 +4,6 @@ const User = require('../models').User;
 const path   = require('path');
 const imageFactory = require('../../libs/image-factory');
 
-/*
-
-  ///// CREATE ////
-
-  method: post
-  url: /api/landmarks/:landmarkId/memories
-  body:
-  {
-    description: "...",
-    userId: "..."
-    memoryImage: "<multi-form>""
-  }
-
-  ///// LIST_LANDMARK /////
-  method: get
-  url: /api/landmarks/:landmarkId/memories
-
-  ///// LIST_ALL /////
-  method: get
-  url: /api/memories
-
-*/
 
 module.exports = {
   create(req, res) {
