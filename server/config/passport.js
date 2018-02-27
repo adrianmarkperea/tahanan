@@ -109,7 +109,6 @@ module.exports = (passport) => {
                   profile_pic_url: profile_pic_url
                 })
                 .then(user => done(null, user))
-                .catch(err => res.status(400).send(err));
             })
         } else {
           return User
@@ -123,7 +122,6 @@ module.exports = (passport) => {
             .then(user => {
               return done(null, user);
             })
-            .catch(err => res.status(400).send(err));
         }
       })
     })
