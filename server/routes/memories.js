@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const memoriesController = require('../controllers').memories;
 
-router.get('/', function (req, res) {
-  res.send('Memories home page');
-});
+router.get('/', memoriesController.listAll);
+
 
 module.exports = router;

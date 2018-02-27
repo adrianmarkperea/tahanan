@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 const app = express();
 const passport = require('passport');
@@ -21,7 +23,7 @@ app.use(passport.session());
 
 app.use(fileUpload());
 
-// TODO: give access to static files
+app.use('/image_store', express.static(path.join(__dirname, 'image_store')));
 
 require('./server/config/passport')(passport);
 require('./server/routes')(app, passport);

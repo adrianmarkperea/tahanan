@@ -1,8 +1,14 @@
 const Memory = require('../models').Memory;
+const Landmark = require('../models').Landmark;
+const User = require('../models').User;
 const path   = require('path');
 const imageFactory = require('../../libs/image-factory');
 
 /*
+
+  ///// CREATE ////
+
+  method: post
   url: /api/landmarks/:landmarkId/memories
   body:
   {
@@ -10,6 +16,14 @@ const imageFactory = require('../../libs/image-factory');
     userId: "..."
     memoryImage: "<multi-form>""
   }
+
+  ///// LIST_LANDMARK /////
+  method: get
+  url: /api/landmarks/:landmarkId/memories
+
+  ///// LIST_ALL /////
+  method: get
+  url: /api/memories
 
 */
 
@@ -30,7 +44,7 @@ module.exports = {
       var image       = req.files.memoryImage;
       var fileName    = (new Date().getTime()).toString() + '.jpg';
       var imagePath   = path.join(__dirname, `/../../image_store/memories/${fileName}`);
-      var image_url   = `/image_store/${fileName}`;
+      var image_url   = `/image_store/memories/${fileName}`;
 
       return imageFactory.storeImage(image, imagePath)
         .then(img => {
@@ -58,5 +72,32 @@ module.exports = {
         .catch(err => res.status(400).send(err));
     }
   },
-  
+  listAll(req, res) {
+    return Memory
+      .findAll({
+        attributes: {exclude: ['LandmarkId', 'UserId']}
+      })
+      .then(memories => res.status(200).json(memories))
+      .catch(err => res.status(400).send(err));
+  },
+  listLandmark(req, res) {
+    return Memory
+      .findAll({
+        attributes: ['id', 'description', 'image_url'],
+        include: [
+          {
+            model: Landmark,
+            attributes: ['id', 'name']
+          },
+          {
+            model: User,
+            attributes: ['id', 'first_name', 'last_name']
+          }
+        ],
+        where: { landmarkId: req.params.landmarkId }
+      })
+      .then(memories => res.status(200).json(memories))
+      .catch(err => res.status(400).send(err));
+  }
+
 }

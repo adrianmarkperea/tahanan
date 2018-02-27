@@ -8,10 +8,12 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Landmark.associate = function(models) {
     Landmark.belongsTo(models.City, {
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      foreignKey: 'cityId'
     });
     Landmark.hasMany(models.Memory, {
-      as: "Memories"
+      as: "Memories",
+      foreignKey: 'landmarkId'
     });
   };
   return Landmark;

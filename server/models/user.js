@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function(models) {
     User.hasMany(models.Memory, {
       as: "Memories",
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      foreignKey: 'userId'
     });
   };
   return User;
