@@ -2,6 +2,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const verifier = require('../../libs/verifier');
 const User = require('../models').User;
 const path = require('path');
+const imageFactory = require('../../libs/image-factory');
 
 module.exports = (passport) => {
 
@@ -87,13 +88,13 @@ module.exports = (passport) => {
         }
         var encryptedPassword = verifier.saltHashPassword(password);
         var hasImage = req.files ? true : false;
-        var image;
         var profile_pic_url;
 
         if (hasImage) {
           var image = req.files.profileImage;
+          console.log(image);
           var fileName = (new Date().getTime()).toString() + '.jpg';
-          var imagePath = path.join(__dirnam, `/../../image_store/profile_pictures/${fileName}`);
+          var imagePath = path.join(__dirname, `/../../image_store/profile_pictures/${fileName}`);
           var profile_pic_url = `/image_store/profile_pictures/${fileName}`;
 
           return imageFactory.storeImage(image, imagePath)
