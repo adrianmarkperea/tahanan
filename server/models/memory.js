@@ -9,10 +9,12 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Memory.associate = function(models) {
     Memory.belongsTo(models.User, {
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      foreignKey: 'userId'
     });
     Memory.belongsTo(models.Landmark, {
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      foreignKey: 'landmarkId'
     });
   };
   return Memory;

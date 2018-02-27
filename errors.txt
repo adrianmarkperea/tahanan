@@ -1,0 +1,4 @@
+001: user does not exist
+002: user already exists
+003: missing fields
+004: wrong password

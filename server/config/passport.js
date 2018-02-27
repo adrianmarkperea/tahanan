@@ -2,11 +2,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const verifier = require('../../libs/verifier');
 const User = require('../models').User;
 
-// 001: user does not exist
-// 002: user already exists
-// 003: missing fields
-// 004: wrong password
-
 module.exports = (passport) => {
 
   passport.serializeUser(function(user, done) {
