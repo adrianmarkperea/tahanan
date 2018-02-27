@@ -4,6 +4,18 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    lon: {
+      type: DataTypes.REAL,
+      allowNull: false
+    },
+    lat: {
+      type: DataTypes.REAL,
+      allowNull: false
+    },
+    image_url: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   }, {});
   Landmark.associate = function(models) {

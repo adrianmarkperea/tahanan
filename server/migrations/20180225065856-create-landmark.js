@@ -11,6 +11,18 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      lon: {
+        type: Sequelize.REAL,
+        allowNull: false
+      },
+      lat: {
+        type: Sequelize.REAL,
+        allowNull: false
+      },
+      image_url: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

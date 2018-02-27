@@ -2,3 +2,4 @@
 002: user already exists
 003: missing fields
 004: wrong password
+005: missing credentials

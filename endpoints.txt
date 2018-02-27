@@ -1,0 +1,60 @@
+/* AUTHENTICATION */
+
+POST /auth/login
+  REQUEST
+  {
+    email: "string",
+    password: "string",
+  }
+  DESCRIPTION
+    Logs in the user.
+
+POST /auth/signup
+  REQUEST
+  {
+    email: "string",
+    password: "string",
+    first_name: "string",
+    last_name: "string",
+    profileImage: "multiform" // optional
+  }
+  DESCRIPTION
+    Registers a new user to the database. Logs in the user automatically.
+
+GET /auth/me
+  DESCRIPTION
+    Returns information about the user
+
+/******************/
+
+/* MAP DATA */
+
+GET /api/map
+  DESCRIPTION
+    Provides data to initalize the map.
+
+/************/
+
+/* MEMORIES */
+
+GET /api/memories/featured
+  DESCRIPTION
+    Provides all featured memories
+
+GET /api/memories/:landmarkId
+  DESCRIPTION
+    Provides all memories in a given landmark
+
+POST /api/memories/:landmarkId
+  REQUEST
+  {
+    description: "string",
+    userId: "int",
+    landmarkId: "int",
+    featured: "boolean",      // optional, defaults to false
+    memoryImage: "multiform"  // optional
+  }
+  DESCRIPTION
+    Adds a new memory to a given landmark
+
+/************/

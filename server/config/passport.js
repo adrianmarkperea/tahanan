@@ -31,7 +31,7 @@ module.exports = (passport) => {
 
       if (!email || !password) {
         return done(null, false, {
-          errorCode: '003',
+          code: '003',
           message: 'missing fields'
         });
       }
@@ -44,7 +44,7 @@ module.exports = (passport) => {
         if (!user) {
           console.log(`User with email ${email} does not exist`);
           return done(null, false, {
-            errorCode: '001',
+            code: '001',
             message: 'user does not exist'
           });
         }
@@ -53,7 +53,7 @@ module.exports = (passport) => {
           return done(null, user);
         } else {
           return done(null, false, {
-            errorCode: '004',
+            code: '004',
             message: 'wrong password'
           });
         }
@@ -71,7 +71,7 @@ module.exports = (passport) => {
       var last_name  = req.body.last_name;
       if (!first_name || !last_name || !email || !password) {
         return done(null, false, {
-          errorCode: '003',
+          code: '003',
           message: 'missing fields'
         });
       }
@@ -82,7 +82,7 @@ module.exports = (passport) => {
       }).then(user => {
         if (user) {
           return done(null, false, {
-            errorCode: '002',
+            code: '002',
             message: 'user already exists'
           });
         }
@@ -117,7 +117,8 @@ module.exports = (passport) => {
               last_name: req.body.last_name,
               email: email,
               password: encryptedPassword.passwordHash,
-              salt: encryptedPassword.salt
+              salt: encryptedPassword.salt,
+              profile_pic_url: '/image_store/profile_pictures/default.jpg'
             })
             .then(user => {
               return done(null, user);

@@ -18,6 +18,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      path: {
+        type: Sequelize.STRING,
+        allowNull: false
       }
     });
   },

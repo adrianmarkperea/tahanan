@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     image_url: DataTypes.TEXT,
+    featured: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, {});
   Memory.associate = function(models) {
     Memory.belongsTo(models.User, {
