@@ -1,6 +1,7 @@
 const LocalStrategy = require('passport-local').Strategy;
 const verifier = require('../../libs/verifier');
 const User = require('../models').User;
+const path = require('path');
 
 module.exports = (passport) => {
 
@@ -85,18 +86,44 @@ module.exports = (passport) => {
           });
         }
         var encryptedPassword = verifier.saltHashPassword(password);
-        return User
-          .create({
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            email: email,
-            password: encryptedPassword.passwordHash,
-            salt: encryptedPassword.salt,
-            profile_pic_url: 'something something'
-          })
-          .then(user => {
-            return done(null, user);
-          })
+        var hasImage = req.files ? true : false;
+        var image;
+        var profile_pic_url;
+
+        if (hasImage) {
+          var image = req.files.profileImage;
+          var fileName = (new Date().getTime()).toString() + '.jpg';
+          var imagePath = path.join(__dirnam, `/../../image_store/profile_pictures/${fileName}`);
+          var profile_pic_url = `/image_store/profile_pictures/${fileName}`;
+
+          return imageFactory.storeImage(image, imagePath)
+            .then(img => {
+              return User
+                .create({
+                  first_name: req.body.first_name,
+                  last_name: req.body.last_name,
+                  email: email,
+                  password: encryptedPassword.passwordHash,
+                  salt: encryptedPassword.salt,
+                  profile_pic_url: profile_pic_url
+                })
+                .then(user => done(null, user))
+                .catch(err => res.status(400).send(err));
+            })
+        } else {
+          return User
+            .create({
+              first_name: req.body.first_name,
+              last_name: req.body.last_name,
+              email: email,
+              password: encryptedPassword.passwordHash,
+              salt: encryptedPassword.salt
+            })
+            .then(user => {
+              return done(null, user);
+            })
+            .catch(err => res.status(400).send(err));
+        }
       })
     })
   );

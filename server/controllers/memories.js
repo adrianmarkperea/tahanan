@@ -36,7 +36,7 @@ module.exports = {
     console.log(`user Id type: ${userId}`);
     console.log(`landmarkId: ${landmarkId}`);
 
-    var hasImage    = req.files ? true : false;
+    var hasImage = req.files ? true : false;
     var image;
     var image_url;
 
