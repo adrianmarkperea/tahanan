@@ -54,7 +54,7 @@ module.exports = {
           newLandmark['gov_id']   = landmark['City']['governorateId'];
           newLandmark['name']     = landmark['name'];
           newLandmark['lat']      = landmark['lat'];
-          newLandmark['lon']      = landmark['lon'];
+          newLandmark['lng']      = landmark['lng'];
           newLandmark['backdrop'] = landmark['image_url'];
           returnJson['landmarks'].push(newLandmark);
         });

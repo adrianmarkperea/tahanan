@@ -34,7 +34,7 @@ module.exports = {
         }
       },
       landmarkId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         references: {
           model: 'Landmarks',
           key: 'id'
