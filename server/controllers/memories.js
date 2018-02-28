@@ -28,15 +28,14 @@ module.exports = {
     var image_url;
 
     if (hasImage) {
-      var image       = req.files.memoryImage;
-      var fileName    = (new Date().getTime()).toString() + '.jpg';
-      var imagePath   = path.join(__dirname, `/../../image_store/memories/${fileName}`);
-      var image_url   = `/image_store/memories/${fileName}`;
+      var image = req.files.memoryImage;
 
-      createParams['image_url'] = image_url;
 
-      return imageFactory.storeImage(image, imagePath)
-        .then(img => {
+      // createParams['image_url'] = image_url;
+
+      return imageFactory.storeImage(image)
+        .then(uploadRes => {
+          createParams['image_url'] = uploadRes['secure_url'];
           return Memory
             .create(createParams)
             .then(memory => {

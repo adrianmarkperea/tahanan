@@ -93,12 +93,10 @@ module.exports = (passport) => {
         if (hasImage) {
           var image = req.files.profileImage;
           console.log(image);
-          var fileName = (new Date().getTime()).toString() + '.jpg';
-          var imagePath = path.join(__dirname, `/../../image_store/profile_pictures/${fileName}`);
-          var profile_pic_url = `/image_store/profile_pictures/${fileName}`;
 
-          return imageFactory.storeImage(image, imagePath)
-            .then(img => {
+          return imageFactory.storeImage(image)
+            .then(uploadRes => {
+              profile_pic_url = uploadRes['secure_url'];
               return User
                 .create({
                   first_name: req.body.first_name,
@@ -118,7 +116,7 @@ module.exports = (passport) => {
               email: email,
               password: encryptedPassword.passwordHash,
               salt: encryptedPassword.salt,
-              profile_pic_url: '/image_store/profile_pictures/default.jpg'
+              profile_pic_url: 'nada'
             })
             .then(user => {
               return done(null, user);

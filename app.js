@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 
 const express = require('express');
@@ -32,6 +33,15 @@ app.get('/', (req, res) => {
 });
 
 app.use('/image_store', express.static(path.join(__dirname, 'image_store')));
+
+app.post('/upload', (req, res) => {
+  var imageFactory = require('./libs/image-factory');
+  imageFactory.storeImageTest(req.files.sample)
+    .then(result => {
+      res.send('okay');
+    });
+
+})
 
 require('./server/config/passport')(passport);
 require('./server/routes')(app, passport);
