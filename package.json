@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start:dev": "node-dev ./bin/www",
+    "prestart": "rm -rf public && svn export https://github.com/mikedelcastillo/tahanan.git/trunk/public",
     "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,6 +26,7 @@
   "homepage": "https://github.com/adrianmarkperea/tahanan#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
     "express": "^4.16.2",
     "express-fileupload": "^0.4.0",
     "express-session": "^1.15.6",

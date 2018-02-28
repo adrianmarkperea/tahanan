@@ -58,15 +58,15 @@ module.exports = {
             })
             .then(memory => {
               var newMemory = {};
-              newMemory['id']          = memory['id'];
-              newMemory['userId']      = memory['User']['id'];
-              newMemory['userName']    = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-              newMemory['landId']      = memory['Landmark']['id'];
-              newMemory['landName']    = memory['Landmark']['name'];
-              newMemory['image_url']   = memory['image_url'];
-              newMemory['content']     = memory['description'];
-              newMemory['dateCreated'] = memory['createdAt'];
-              newMemory['featured']    = memory['featured']
+              newMemory['mem_id']    = memory['id'];
+              newMemory['user_id']   = memory['User']['id'];
+              newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+              newMemory['land_id']   = memory['Landmark']['id'];
+              newMemory['land_name'] = memory['Landmark']['name'];
+              newMemory['image']     = memory['image_url'];
+              newMemory['content']   = memory['description'];
+              newMemory['date']      = memory['createdAt'];
+              newMemory['featured']  = memory['featured']
               res.status(200).json(newMemory);
             })
             .catch(err => res.status(400).send(err));
@@ -96,15 +96,15 @@ module.exports = {
         })
         .then(memory => {
           var newMemory = {};
-          newMemory['id']          = memory['id'];
-          newMemory['userId']      = memory['User']['id'];
-          newMemory['userName']    = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-          newMemory['landId']      = memory['Landmark']['id'];
-          newMemory['landName']    = memory['Landmark']['name'];
-          newMemory['image_url']   = memory['image_url'];
-          newMemory['content']     = memory['description'];
-          newMemory['dateCreated'] = memory['createdAt'];
-          newMemory['featured']    = memory['featured']
+          newMemory['mem_id']    = memory['id'];
+          newMemory['user_id']   = memory['User']['id'];
+          newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+          newMemory['land_id']   = memory['Landmark']['id'];
+          newMemory['land_name'] = memory['Landmark']['name'];
+          newMemory['image']     = memory['image_url'];
+          newMemory['content']   = memory['description'];
+          newMemory['date']      = memory['createdAt'];
+          newMemory['featured']  = memory['featured']
           res.status(200).json(newMemory);
         })
         .catch(err => res.status(400).send(err));
@@ -133,15 +133,15 @@ module.exports = {
       .then(memories => {
         memories.forEach(memory => {
           var newMemory = {};
-          newMemory['id']          = memory['id'];
-          newMemory['userId']      = memory['User']['id'];
-          newMemory['userName']    = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-          newMemory['landId']      = memory['Landmark']['id'];
-          newMemory['landName']    = memory['Landmark']['name'];
-          newMemory['image_url']   = memory['image_url'];
-          newMemory['content']     = memory['description'];
-          newMemory['dateCreated'] = memory['createdAt'];
-          newMemory['featured']    = memory['featured']
+          newMemory['mem_id']    = memory['id'];
+          newMemory['user_id']   = memory['User']['id'];
+          newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+          newMemory['land_id']   = memory['Landmark']['id'];
+          newMemory['land_name'] = memory['Landmark']['name'];
+          newMemory['image']     = memory['image_url'];
+          newMemory['content']   = memory['description'];
+          newMemory['date']      = memory['createdAt'];
+          newMemory['featured']  = memory['featured']
           returnJson['data'].push(newMemory);
         });
         res.status(200).json(returnJson);
@@ -171,15 +171,15 @@ module.exports = {
       .then(memories => {
         memories.forEach(memory => {
           var newMemory = {};
-          newMemory['id']          = memory['id'];
-          newMemory['userId']      = memory['User']['id'];
-          newMemory['userName']    = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-          newMemory['landId']      = memory['Landmark']['id'];
-          newMemory['landName']    = memory['Landmark']['name'];
-          newMemory['image_url']   = memory['image_url'];
-          newMemory['content']     = memory['description'];
-          newMemory['dateCreated'] = memory['createdAt'];
-          newMemory['featured']    = memory['featured']
+          newMemory['mem_id']    = memory['id'];
+          newMemory['user_id']   = memory['User']['id'];
+          newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+          newMemory['land_id']   = memory['Landmark']['id'];
+          newMemory['land_name'] = memory['Landmark']['name'];
+          newMemory['image']     = memory['image_url'];
+          newMemory['content']   = memory['description'];
+          newMemory['date']      = memory['createdAt'];
+          newMemory['featured']  = memory['featured']
           returnJson['data'].push(newMemory);
         });
         res.status(200).json(returnJson);

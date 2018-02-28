@@ -23,6 +23,10 @@ POST /auth/signup
 
 GET /auth/me
   DESCRIPTION
+    Logs the user out
+
+GET /auth/me
+  DESCRIPTION
     Returns information about the user
 
 /******************/
