@@ -31,9 +31,6 @@ module.exports = {
     if (hasImage) {
       var image = req.files.memoryImage;
 
-
-      // createParams['image_url'] = image_url;
-
       return imageFactory.storeImage(image)
         .then(uploadRes => {
           createParams['image_url'] = uploadRes['secure_url'];
@@ -124,27 +121,60 @@ module.exports = {
           },
           {
             model: User,
-            attributes: ['id', 'first_name', 'last_name']
+            attributes: ['id', 'first_name', 'last_name'],
           }
         ],
         where: { landmarkId: req.params.landmarkId },
         raw: false
       })
       .then(memories => {
-        memories.forEach(memory => {
-          var newMemory = {};
-          newMemory['mem_id']    = memory['id'];
-          newMemory['user_id']   = memory['User']['id'];
-          newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-          newMemory['land_id']   = memory['Landmark']['id'];
-          newMemory['land_name'] = memory['Landmark']['name'];
-          newMemory['image']     = memory['image_url'];
-          newMemory['content']   = memory['description'];
-          newMemory['date']      = memory['createdAt'];
-          newMemory['featured']  = memory['featured']
-          returnJson['data'].push(newMemory);
+        var likers = [];
+        const getLikers = async n =>
+        {
+          for (let i = 0; i < n; i++) {
+            const x = await memories[i].getUsers();
+            likers.push(x);
+          }
+          return 'done'
+        }
+
+        getLikers(memories.length).then(() => {
+          // console.log(likes);
+          for (var i = 0; i < memories.length; i++) {
+            var memory = memories[i];
+            var newMemory = {};
+            newMemory['mem_id']    = memory['id'];
+            newMemory['user_id']   = memory['User']['id'];
+            newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+            newMemory['land_id']   = memory['Landmark']['id'];
+            newMemory['land_name'] = memory['Landmark']['name'];
+            newMemory['image']     = memory['image_url'];
+            newMemory['content']   = memory['description'];
+            newMemory['date']      = memory['createdAt'];
+            newMemory['featured']  = memory['featured']
+            newMemory['likers']    = likers[i];
+            newMemory['likeCount'] = likers[i].length;
+            returnJson['data'].push(newMemory);
+          }
+          res.status(200).json(returnJson);
         });
-        res.status(200).json(returnJson);
+
+
+        //
+        // memories.forEach(memory => {
+        //   var newMemory = {};
+        //   newMemory['mem_id']    = memory['id'];
+        //   newMemory['user_id']   = memory['User']['id'];
+        //   newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+        //   newMemory['land_id']   = memory['Landmark']['id'];
+        //   newMemory['land_name'] = memory['Landmark']['name'];
+        //   newMemory['image']     = memory['image_url'];
+        //   newMemory['content']   = memory['description'];
+        //   newMemory['date']      = memory['createdAt'];
+        //   newMemory['featured']  = memory['featured']
+        //   returnJson['data'].push(newMemory);
+        // });
+
       })
       .catch(err => res.status(400).send(err));
   },
@@ -194,39 +224,6 @@ module.exports = {
       .then(memories => res.status(200).json(memories))
       .catch(err => res.status(400).send(err));
   },
-  // like(req, res) {
-  //   var selectedMemory;
-  //   return Memory
-  //     .findById(req.params.memoryId)
-  //     .then(memory => {
-  //       if (!memory) {
-  //         // TODO: Add Error
-  //       }
-  //       selectedMemory = memory;
-  //       return User
-  //         .findById(req.body.userId)
-  //     })
-  //     .then(user => {
-  //       if (!user) {
-  //         // TODO: Add Error
-  //       }
-  //       return selectedMemory
-  //         .hasUser(user, { through: {} })
-  //     })
-  //     .then(hasUser => {
-  //       if (!hasUser) {
-  //         return selectedMemory
-  //           .addUser(user, { through: {} })
-  //           .then(() => {
-  //             res.status(200).send("Liked");
-  //           })
-  //       } else {
-  //         // TODO: Error
-  //         res.status(400).send('Error');
-  //       }
-  //     })
-  //     .catch(err => res.status(400).send(err));
-  // },
   like(req, res) {
     var selectedMemory;
     var selectedUser;
@@ -278,6 +275,21 @@ module.exports = {
         } else {
           res.status(400).send(err);
         }
+      })
+  },
+  getLikes(req, res) {
+    return Memory
+      .findById(req.params.memoryId)
+      .then(memory => {
+        if (!memory) {
+          // TODO: Error
+        }
+        return memory
+          .getUsers()
+          .then(users => {
+            console.log(users);
+            res.status(200).json(users);
+          })
       })
   }
 }

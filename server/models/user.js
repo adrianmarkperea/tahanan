@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       foreignKey: 'userId'
     });
-    User.belongsToMany(models.Memory, { through: 'Likes', foreignKey: 'memoryId'});
+    User.belongsToMany(models.Memory, { through: 'Likes', foreignKey: 'userId'});
   };
   return User;
 };
