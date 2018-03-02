@@ -11,11 +11,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       lng: {
-        type: Sequelize.REAL,
+        type: Sequelize.DOUBLE,
         allowNull: false
       },
       lat: {
-        type: Sequelize.REAL,
+        type: Sequelize.DOUBLE,
         allowNull: false
       },
       image_url: {

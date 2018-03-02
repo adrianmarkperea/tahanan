@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     lng: {
-      type: DataTypes.REAL,
+      type: DataTypes.DOUBLE,
       allowNull: false
     },
     lat: {
-      type: DataTypes.REAL,
+      type: DataTypes.DOUBLE,
       allowNull: false
     },
     image_url: {
