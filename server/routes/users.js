@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const usersController = require('../controllers').users;
 
-router.get('/', function (req, res) {
-  res.send('Users home page');
-});
+router.post('/:userId', usersController.update);
 
 module.exports = router;

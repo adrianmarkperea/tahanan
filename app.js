@@ -49,3 +49,9 @@ app.get('*', (req, res) => {
 });
 
 module.exports = app;
+
+// TODO: Add show memories by user
+// TODO: Add count
+// TODO: Add like
+// TODO: Add like count
+// TODO: Add comment

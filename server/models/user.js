@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    bio: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     salt: {
       type: DataTypes.STRING,
       allowNull: false

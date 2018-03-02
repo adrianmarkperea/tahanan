@@ -1,11 +1,11 @@
 const memories = require('./memories');
-const landmarks = require('./landmarks');
-const governorates = require('./governorates');
 const map = require('./map');
+const users = require('./users');
+
+
 
 module.exports = {
   memories,
-  landmarks,
-  governorates,
-  map
+  map,
+  users
 };

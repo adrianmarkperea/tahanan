@@ -1,7 +1,4 @@
 module.exports = (app, passport) => {
-  const cities       = require('./cities.js');
-  const governorates = require('./governorates');
-  const landmarks    = require('./landmarks');
   const memories     = require('./memories');
   const users        = require('./users');
   const auth         = require('./auth')(app, passport);
@@ -12,7 +9,9 @@ module.exports = (app, passport) => {
   // app.use('/api/landmarks', landmarks);
 
   // app.use('/api/users', users);
-  app.use('/auth', auth);
   app.use('/api/memories', memories);
+  app.use('/api/users', users);
+  app.use('/auth', auth);
   app.use('/api/map', map);
+
 }
