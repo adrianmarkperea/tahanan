@@ -1,6 +1,7 @@
 const Memory = require('../models').Memory;
 const Landmark = require('../models').Landmark;
 const User = require('../models').User;
+const Like = require('../models').Like;
 const path   = require('path');
 const imageFactory = require('../../libs/image-factory');
 
@@ -10,7 +11,7 @@ module.exports = {
 
     var description = req.body.description;
     var userId      = parseInt(req.body.userId);
-    var landmarkId  = parseInt(req.params.landmarkId);
+    var landmarkId  = req.params.landmarkId;
     var featured    = req.body.featured;
 
     var createParams = {};
@@ -193,4 +194,90 @@ module.exports = {
       .then(memories => res.status(200).json(memories))
       .catch(err => res.status(400).send(err));
   },
+  // like(req, res) {
+  //   var selectedMemory;
+  //   return Memory
+  //     .findById(req.params.memoryId)
+  //     .then(memory => {
+  //       if (!memory) {
+  //         // TODO: Add Error
+  //       }
+  //       selectedMemory = memory;
+  //       return User
+  //         .findById(req.body.userId)
+  //     })
+  //     .then(user => {
+  //       if (!user) {
+  //         // TODO: Add Error
+  //       }
+  //       return selectedMemory
+  //         .hasUser(user, { through: {} })
+  //     })
+  //     .then(hasUser => {
+  //       if (!hasUser) {
+  //         return selectedMemory
+  //           .addUser(user, { through: {} })
+  //           .then(() => {
+  //             res.status(200).send("Liked");
+  //           })
+  //       } else {
+  //         // TODO: Error
+  //         res.status(400).send('Error');
+  //       }
+  //     })
+  //     .catch(err => res.status(400).send(err));
+  // },
+  like(req, res) {
+    var selectedMemory;
+    var selectedUser;
+    return Memory
+      .findById(req.params.memoryId)
+      .then(memory => {
+        if (!memory) {
+          // TODO: Error
+        }
+        selectedMemory = memory;
+        return User
+          .findById(req.body.userId)
+      })
+      .then(user => {
+        if (!user) {
+          // TODO: Error
+        }
+        selectedUser = user;
+        return Like
+          .create({
+            userId: selectedUser.id,
+            memoryId: selectedMemory.id
+          })
+      })
+      .then(like => {
+        console.log(like);
+        res.status(200).json(like);
+      })
+      .catch(err => {
+        // User has already liked the memory
+        if (err['name'] === 'SequelizeUniqueConstraintError') {
+
+          return Like
+            .destroy({
+              where: {
+                userId: selectedUser.id,
+                memoryId: selectedMemory.id
+              }
+            })
+            .then(delRes => {
+              console.log(delRes);
+              if (delRes === 1) {
+                  res.status(200).send('unliked');
+              }
+            })
+            .catch(err => {
+              res.status(400).send(err);
+            })
+        } else {
+          res.status(400).send(err);
+        }
+      })
+  }
 }

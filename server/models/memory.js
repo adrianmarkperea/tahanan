@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       foreignKey: 'landmarkId'
     });
+    Memory.belongsToMany(models.User, { through: 'Likes', foreignKey: 'userId'});
   };
   return Memory;
 };
