@@ -40,8 +40,8 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
           cityId: "JEB",
-          lat: '25.9941389',
-          lng: '50.442929',
+          lat: '25.9941341',
+          lng: '50.5811658',
           image_url: 'https://res.cloudinary.com/higid3pm1/video/upload/v1519795245/landmarks/tree-of-life.mp4'
         }
       ],
