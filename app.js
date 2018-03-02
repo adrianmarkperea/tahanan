@@ -26,11 +26,7 @@ app.use(passport.session());
 
 app.use(fileUpload());
 
-app.use('/static', express.static(path.join(__dirname, 'public')));
-
-app.get('/', (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.use('/image_store', express.static(path.join(__dirname, 'image_store')));
 

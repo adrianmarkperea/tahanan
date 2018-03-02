@@ -4,8 +4,8 @@
   "description": "Tahanan Social Media App by Joan Lao",
   "main": "app.js",
   "scripts": {
+    "prestart:dev": "rm -rf public && svn export https://github.com/mikedelcastillo/tahanan.git/trunk/public",
     "start:dev": "node-dev ./bin/www",
-    "prestart": "rm -rf public && svn export https://github.com/mikedelcastillo/tahanan.git/trunk/public",
     "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
