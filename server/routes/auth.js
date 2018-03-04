@@ -15,15 +15,19 @@ module.exports = (app, passport) => {
   router.post('/login', (req, res, next) => {
     passport.authenticate('login', (err, user, info) => {
       if (err) { return next(err); }
+      var returnJson = {};
       if (!user) {
-        var returnJson = {};
         info.code = info.code || '005';
         returnJson.errors = [info];
         return res.status(400).json(returnJson);
       }
       req.login(user, (err) => {
         if (err) { return next(err); }
-        return res.redirect('/api/auth/success_login');
+        returnJson = extractUserData(user);
+        returnJson.errors   = [];
+        returnJson.message  = 'Log In Successful';
+        returnJson.loggedIn = true;
+        return res.status(200).json(returnJson);
       });
     })(req, res, next);
   });
@@ -40,16 +44,20 @@ module.exports = (app, passport) => {
 
   router.post('/signup', (req, res, next) => {
     passport.authenticate('signup', (err, user, info) => {
+      var returnJson = {};
       if (err) { return next(err); }
       if (!user) {
-        var returnJson = {};
         info.code = info.code || '005';
         returnJson.errors = [info];
         return res.status(400).json(returnJson);
       }
       req.login(user, (err) => {
         if (err) { return next(err); }
-        return res.redirect('/api/auth/success_signup');
+        returnJson = extractUserData(user);
+        returnJson.errors = [];
+        returnJson.message = 'Sign Up Successful. User is logged in';
+        returnJson.loggedIn = true;
+        return res.status(200).json(returnJson);
       });
     })(req, res, next);
   });
