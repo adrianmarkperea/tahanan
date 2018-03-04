@@ -11,7 +11,7 @@ module.exports = (app, passport) => {
   // app.use('/api/users', users);
   app.use('/api/memories', memories);
   app.use('/api/users', users);
-  app.use('/auth', auth);
+  app.use('/api/auth', auth);
   app.use('/api/map', map);
 
 }

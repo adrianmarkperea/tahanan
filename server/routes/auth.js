@@ -23,7 +23,7 @@ module.exports = (app, passport) => {
       }
       req.login(user, (err) => {
         if (err) { return next(err); }
-        return res.redirect('/auth/success_login');
+        return res.redirect('/api/auth/success_login');
       });
     })(req, res, next);
   });
@@ -49,7 +49,7 @@ module.exports = (app, passport) => {
       }
       req.login(user, (err) => {
         if (err) { return next(err); }
-        return res.redirect('/auth/success_signup');
+        return res.redirect('/api/auth/success_signup');
       });
     })(req, res, next);
   });
