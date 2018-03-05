@@ -224,7 +224,7 @@ module.exports = {
       })
       .catch(err => res.status(400).send(err));
   },
-  getLandmarkFeaturedMemories(req, res) {
+  getFeaturedMemories(req, res) {
     var returnJson = {};
     returnJson.data = [];
     returnJson.errors = [];
@@ -241,7 +241,7 @@ module.exports = {
             attributes: ['id', 'first_name', 'last_name']
           }
         ],
-        where: { featured: true, landmarkId: req.params.landmarkId },
+        where: { featured: true },
         raw: false,
         order: [
           ['createdAt', 'DESC']
