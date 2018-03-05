@@ -19,7 +19,7 @@ module.exports = (app, passport) => {
       if (!user) {
         info.code = info.code || '005';
         returnJson.errors = [info];
-        return res.status(400).json(returnJson);
+        return res.status(200).json(returnJson);
       }
       req.login(user, (err) => {
         if (err) { return next(err); }
@@ -49,7 +49,7 @@ module.exports = (app, passport) => {
       if (!user) {
         info.code = info.code || '005';
         returnJson.errors = [info];
-        return res.status(400).json(returnJson);
+        return res.status(200).json(returnJson);
       }
       req.login(user, (err) => {
         if (err) { return next(err); }
