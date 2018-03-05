@@ -1,11 +1,12 @@
 const User = require('../models').User;
 const imageFactory = require('../../libs/image-factory');
+const verifier = require('../../libs/verifier');
 
 // api/users/:userId
 // REQ
 // {
 //   bio: 'string',
-//   profile_pic_url: 'multiform'
+//   profileImage: 'multiform'
 // }
 
 
@@ -14,7 +15,7 @@ module.exports = {
     var returnJson = {};
     returnJson['errors'] = [];
     var bio = req.body.bio;
-    var profile_pic_image = req.files ? req.files.profile_pic_url : null;
+    var profile_pic_image = req.files ? req.files.profileImage : null;
     var profile_pic_url = null;
 
     return User
@@ -25,6 +26,10 @@ module.exports = {
           console.log('No user');
           return res.status(404).json(returnJson);
         }
+
+        var first_name = req.body.first_name || user[1][0]['first_name']
+        var last_name = req.body.last_name || user[1][0]['first_name']
+
         if (profile_pic_image) {
            return imageFactory.storeImage(profile_pic_image)
             .then(uploadRes => {
@@ -33,10 +38,12 @@ module.exports = {
                 .update(
                   {
                     bio: bio,
-                    profile_pic_url: profile_pic_url
+                    profile_pic_url: profile_pic_url,
+                    first_name: first_name,
+                    last_name: last_name
                   },
                   {
-                    fields: ['bio', 'profile_pic_url'],
+                    fields: ['bio', 'profile_pic_url', 'first_name', 'last_name'],
                     where: { id: user['id'] },
                     returning: true
                 })
@@ -54,10 +61,12 @@ module.exports = {
           return User
             .update(
               {
-                bio: bio
+                bio: bio,
+                first_name: first_name,
+                last_name: last_name
               },
               {
-                fields: ['bio'],
+                fields: ['bio', 'first_name', 'last_name'],
                 where: { id: user['id'] },
                 returning: true
             })
