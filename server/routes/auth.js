@@ -61,9 +61,10 @@ module.exports = (app, passport) => {
       });
     })(req, res, next);
   });
+
   router.get('/signout', function(req, res) {
     req.logout();
-    return res.status(200).send('You are logged out');
+    return res.status(200).json('You are logged out');
   })
 
     router.get('/success_signup', (req, res) => {
@@ -78,6 +79,7 @@ module.exports = (app, passport) => {
 
   router.get('/me', (req, res) => {
     var returnJson = {};
+    console.log(req)
     if (req.isAuthenticated()) {
       returnJson = extractUserData(req['user']);
       returnJson.errors = [];

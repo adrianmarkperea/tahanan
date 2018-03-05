@@ -107,6 +107,60 @@ module.exports = {
         .catch(err => res.status(400).send(err));
     }
   },
+  getUserMemories(req, res) {
+    var returnJson = {};
+    returnJson.data = [];
+    returnJson.errors = [];
+    return Memory
+      .findAll({
+        attributes: ['id', 'description', 'image_url', 'createdAt', 'featured'],
+        include: [
+          {
+            model: Landmark,
+            attributes: ['id', 'name']
+          },
+          {
+            model: User,
+            attributes: ['id', 'first_name', 'last_name'],
+          }
+        ],
+        where: { userId: req.params.userId }
+      })
+      .then(memories => {
+        var likers = [];
+
+        const getLikers = async n =>
+        {
+          for (let i = 0; i < n; i++) {
+            const x = await memories[i].getUsers();
+            likers.push(x);
+          }
+          return 'done'
+        }
+
+        getLikers(memories.length).then(() => {
+          // console.log(likes);
+          for (var i = 0; i < memories.length; i++) {
+            var memory = memories[i];
+            var newMemory = {};
+            newMemory['mem_id']    = memory['id'];
+            newMemory['user_id']   = memory['User']['id'];
+            newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+            newMemory['land_id']   = memory['Landmark']['id'];
+            newMemory['land_name'] = memory['Landmark']['name'];
+            newMemory['image']     = memory['image_url'];
+            newMemory['content']   = memory['description'];
+            newMemory['date']      = memory['createdAt'];
+            newMemory['featured']  = memory['featured']
+            newMemory['likers']    = likers[i];
+            newMemory['likeCount'] = likers[i].length;
+            returnJson['data'].push(newMemory);
+          }
+          res.status(200).json(returnJson);
+        })
+      })
+      .catch(err => res.status(400).send(err));
+  },
   getLandmarkMemories(req, res) {
     var returnJson = {};
     returnJson.data = [];
@@ -129,6 +183,7 @@ module.exports = {
       })
       .then(memories => {
         var likers = [];
+
         const getLikers = async n =>
         {
           for (let i = 0; i < n; i++) {
@@ -159,26 +214,10 @@ module.exports = {
           res.status(200).json(returnJson);
         });
 
-
-        //
-        // memories.forEach(memory => {
-        //   var newMemory = {};
-        //   newMemory['mem_id']    = memory['id'];
-        //   newMemory['user_id']   = memory['User']['id'];
-        //   newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-        //   newMemory['land_id']   = memory['Landmark']['id'];
-        //   newMemory['land_name'] = memory['Landmark']['name'];
-        //   newMemory['image']     = memory['image_url'];
-        //   newMemory['content']   = memory['description'];
-        //   newMemory['date']      = memory['createdAt'];
-        //   newMemory['featured']  = memory['featured']
-        //   returnJson['data'].push(newMemory);
-        // });
-
       })
       .catch(err => res.status(400).send(err));
   },
-  getFeaturedMemories(req, res) {
+  getLandmarkFeaturedMemories(req, res) {
     var returnJson = {};
     returnJson.data = [];
     returnJson.errors = [];
@@ -195,7 +234,7 @@ module.exports = {
             attributes: ['id', 'first_name', 'last_name']
           }
         ],
-        where: { featured: true },
+        where: { featured: true, landmarkId: req.params.landmarkId },
         raw: false
       })
       .then(memories => {
@@ -290,6 +329,24 @@ module.exports = {
             console.log(users);
             res.status(200).json(users);
           })
+      })
+  },
+  retrieveMemory(req, res) {
+    var returnJson = {};
+    return Memory
+      .findById(req.params.memoryId)
+      .then(memory => {
+        if (!memory) {
+          // TODO: Error!
+        }
+        returnJson['memory'] = memory;
+        return memory
+          .getUsers() // get likers
+      })
+      .then(users => {
+        returnJson['likers'] = users;
+        returnJson['likeCount'] = users.length;
+        res.status(200).json(returnJson);
       })
   }
 }
