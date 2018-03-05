@@ -91,7 +91,7 @@ module.exports = (app, passport) => {
         message: 'unauthorized'
       }];
       returnJson.loggedIn = false;
-      return res.status(403).json(returnJson);
+      return res.status(200).json(returnJson);
     }
   });
   return router
