@@ -25,6 +25,7 @@ module.exports = {
     console.log(landmarkId);
 
     var hasImage = req.files ? true : false;
+    console.log(hasImage)
     var image;
     var image_url;
 
@@ -124,7 +125,10 @@ module.exports = {
             attributes: ['id', 'first_name', 'last_name'],
           }
         ],
-        where: { userId: req.params.userId }
+        where: { userId: req.params.userId },
+        order: [
+          ['createdAt', 'DESC']
+        ]
       })
       .then(memories => {
         var likers = [];
@@ -152,8 +156,8 @@ module.exports = {
             newMemory['content']   = memory['description'];
             newMemory['date']      = memory['createdAt'];
             newMemory['featured']  = memory['featured']
-            newMemory['likers']    = likers[i];
-            newMemory['likeCount'] = likers[i].length;
+            // newMemory['likers']    = likers[i];
+            newMemory['likes'] = likers[i].length;
             returnJson['data'].push(newMemory);
           }
           res.status(200).json(returnJson);
@@ -176,7 +180,10 @@ module.exports = {
           {
             model: User,
             attributes: ['id', 'first_name', 'last_name'],
-          }
+          },
+        ],
+        order: [
+          ['createdAt', 'DESC']
         ],
         where: { landmarkId: req.params.landmarkId },
         raw: false
@@ -207,8 +214,8 @@ module.exports = {
             newMemory['content']   = memory['description'];
             newMemory['date']      = memory['createdAt'];
             newMemory['featured']  = memory['featured']
-            newMemory['likers']    = likers[i];
-            newMemory['likeCount'] = likers[i].length;
+            // newMemory['likers']    = likers[i];
+            newMemory['likes'] = likers[i].length;
             returnJson['data'].push(newMemory);
           }
           res.status(200).json(returnJson);
@@ -235,7 +242,10 @@ module.exports = {
           }
         ],
         where: { featured: true, landmarkId: req.params.landmarkId },
-        raw: false
+        raw: false,
+        order: [
+          ['createdAt', 'DESC']
+        ]
       })
       .then(memories => {
         var likers = [];
@@ -263,8 +273,8 @@ module.exports = {
             newMemory['content']   = memory['description'];
             newMemory['date']      = memory['createdAt'];
             newMemory['featured']  = memory['featured']
-            newMemory['likers']    = likers[i];
-            newMemory['likeCount'] = likers[i].length;
+            // newMemory['likers']    = likers[i];
+            newMemory['likes'] = likers[i].length;
             returnJson['data'].push(newMemory);
           }
           res.status(200).json(returnJson);
@@ -351,19 +361,40 @@ module.exports = {
   },
   retrieveMemory(req, res) {
     var returnJson = {};
+    var selectedMemory;
     return Memory
-      .findById(req.params.memoryId)
+      .findById(req.params.memoryId, {
+        attributes: ['id', 'description', 'image_url', 'createdAt', 'featured'],
+        include: [
+          {
+            model: Landmark,
+            attributes: ['id', 'name']
+          },
+          {
+            model: User,
+            attributes: ['id', 'first_name', 'last_name']
+          }
+        ]
+      })
       .then(memory => {
         if (!memory) {
           // TODO: Error!
         }
-        returnJson['memory'] = memory;
+        selectedMemory = memory;
         return memory
           .getUsers() // get likers
       })
       .then(users => {
-        returnJson['likers'] = users;
-        returnJson['likeCount'] = users.length;
+        returnJson['mem_id']    = selectedMemory['id'];
+        returnJson['user_id']   = selectedMemory['User']['id'];
+        returnJson['user_name'] = selectedMemory['User']['first_name'] + ' ' +  selectedMemory['User']['last_name'];
+        returnJson['land_id']   = selectedMemory['Landmark']['id'];
+        returnJson['land_name'] = selectedMemory['Landmark']['name'];
+        returnJson['image']     = selectedMemory['image_url'];
+        returnJson['content']   = selectedMemory['description'];
+        returnJson['date']      = selectedMemory['createdAt'];
+        returnJson['featured']  = selectedMemory['featured']
+        returnJson['likes'] = users.length;
         res.status(200).json(returnJson);
       })
   }
