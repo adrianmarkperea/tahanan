@@ -238,20 +238,37 @@ module.exports = {
         raw: false
       })
       .then(memories => {
-        memories.forEach(memory => {
-          var newMemory = {};
-          newMemory['mem_id']    = memory['id'];
-          newMemory['user_id']   = memory['User']['id'];
-          newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-          newMemory['land_id']   = memory['Landmark']['id'];
-          newMemory['land_name'] = memory['Landmark']['name'];
-          newMemory['image']     = memory['image_url'];
-          newMemory['content']   = memory['description'];
-          newMemory['date']      = memory['createdAt'];
-          newMemory['featured']  = memory['featured']
-          returnJson['data'].push(newMemory);
+        var likers = [];
+
+        const getLikers = async n =>
+        {
+          for (let i = 0; i < n; i++) {
+            const x = await memories[i].getUsers();
+            likers.push(x);
+          }
+          return 'done'
+        }
+
+        getLikers(memories.length).then(() => {
+          // console.log(likes);
+          for (var i = 0; i < memories.length; i++) {
+            var memory = memories[i];
+            var newMemory = {};
+            newMemory['mem_id']    = memory['id'];
+            newMemory['user_id']   = memory['User']['id'];
+            newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+            newMemory['land_id']   = memory['Landmark']['id'];
+            newMemory['land_name'] = memory['Landmark']['name'];
+            newMemory['image']     = memory['image_url'];
+            newMemory['content']   = memory['description'];
+            newMemory['date']      = memory['createdAt'];
+            newMemory['featured']  = memory['featured']
+            newMemory['likers']    = likers[i];
+            newMemory['likeCount'] = likers[i].length;
+            returnJson['data'].push(newMemory);
+          }
+          res.status(200).json(returnJson);
         });
-        res.status(200).json(returnJson);
       })
       .catch(err => res.status(400).send(err));
   },
@@ -316,6 +333,7 @@ module.exports = {
         }
       })
   },
+  // TODO: Do we need this?!
   getLikes(req, res) {
     return Memory
       .findById(req.params.memoryId)
