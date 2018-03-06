@@ -28,7 +28,7 @@ module.exports = {
     console.log(`Has Image: ${hasImage}`)
     if (hasImage) {
       console.log(`Image Name: ${req.files.memoryImage.name}`)
-      if (req.files.memoryImage.name === '') {
+      if (req.files.memoryImage === null) {
         hasImage = false
       }
     }
