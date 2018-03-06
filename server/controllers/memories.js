@@ -235,6 +235,10 @@ module.exports = {
                 newMemory['featured']  = memory['featured']
                 newMemory['likes'] = likers[i].length;
                 newMemory['comment_count'] = commenters[i].length;
+                newMemory['liker_ids'] = [];
+                likers[i].forEach(liker => {
+                  newMemory['liker_ids'].push(liker['dataValues']['id']);
+                })
                 returnJson['data'].push(newMemory);
               }
               res.status(200).json(returnJson);
@@ -319,6 +323,10 @@ module.exports = {
                 newMemory['date']      = memory['createdAt'];
                 newMemory['featured']  = memory['featured']
                 newMemory['likes'] = likers[i].length;
+                newMemory['liker_ids'] = [];
+                likers[i].forEach(liker => {
+                  newMemory['liker_ids'].push(liker['dataValues']['id']);
+                })
                 newMemory['comment_count'] = commenters[i].length;
                 returnJson['data'].push(newMemory);
               }
@@ -508,6 +516,11 @@ module.exports = {
         })
       .then(users => {
         returnJson['likes'] = users.length;
+        returnJson['liker_ids'] = [];
+        users.forEach(user => {
+          returnJson['liker_ids'].push(user['dataValues']['id']);
+        })
+        console.log(users);
         return selectedMemory
           .getCommenters()
       })
