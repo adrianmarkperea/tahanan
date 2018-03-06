@@ -25,14 +25,15 @@ module.exports = {
     console.log(landmarkId);
 
     var hasImage = req.files ? true : false;
-    console.log(`Has Image: ${hasImage}`)
+    console.log(`Has Image: ${hasImage}`);
     if (hasImage) {
-      if (req.files.memoryImage === null) {
+      console.log(`Memory Image: ${req.files.memoryImage}`);
+      if (req.files.memoryImage === undefined || req.files.memoryImage === null) {
+        console.log(`Memory Image Is Null: ${req.files.memoryImage === null}`);
         hasImage = false
       }
     }
 
-    console.log(hasImage)
     var image;
     var image_url;
 
