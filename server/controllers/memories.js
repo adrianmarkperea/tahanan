@@ -25,10 +25,7 @@ module.exports = {
     console.log(landmarkId);
 
     var hasImage = req.files ? true : false;
-    var image = req.files.memoryImage;
-    if (!image) {
-      hasImage = false
-    }
+
     console.log(hasImage)
     var image;
     var image_url;
@@ -77,6 +74,7 @@ module.exports = {
         })
 
     } else {
+      createParams['image_url'] = 'none';
       return Memory
         .create(createParams)
         .then(memory => {
