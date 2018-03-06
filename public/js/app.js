@@ -10783,6 +10783,7 @@ modal.$form.find("button").click(function (e) {
 
 var Modal = __webpack_require__(3);
 var api = __webpack_require__(0);
+var app = __webpack_require__(2);
 
 var modal = module.exports = new Modal("sign-up");
 
@@ -11639,6 +11640,7 @@ function loadMemories() {
     $memories.append($btnNewMemory);
     $memories.append($btnBack);
     $btnNewMemory.click(function (e) {
+      modalMakeMemory.part("form");
       modalMakeMemory.show();
     });
     $btnBack.click(function (e) {
