@@ -4,6 +4,7 @@ const User = require('../models').User;
 const Like = require('../models').Like;
 const path   = require('path');
 const imageFactory = require('../../libs/image-factory');
+const sequelize = require('sequelize');
 
 
 module.exports = {
@@ -199,6 +200,7 @@ module.exports = {
       })
       .then(memories => {
         var likers = [];
+        var commenters = [];
 
         const getLikers = async n =>
         {
@@ -209,27 +211,35 @@ module.exports = {
           return 'done'
         }
 
-        getLikers(memories.length).then(() => {
-          // console.log(likes);
-          for (var i = 0; i < memories.length; i++) {
-            var memory = memories[i];
-            var newMemory = {};
-            newMemory['mem_id']    = memory['id'];
-            newMemory['user_id']   = memory['User']['id'];
-            newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-            newMemory['land_id']   = memory['Landmark']['id'];
-            newMemory['land_name'] = memory['Landmark']['name'];
-            newMemory['image']     = memory['image_url'];
-            newMemory['content']   = memory['description'];
-            newMemory['date']      = memory['createdAt'];
-            newMemory['featured']  = memory['featured']
-            // newMemory['likers']    = likers[i];
-            newMemory['likes'] = likers[i].length;
-            returnJson['data'].push(newMemory);
+        const getCommenters = async n => {
+          for (let i = 0; i < n; i++) {
+            const x = await memories[i].getCommenters();
+            commenters.push(x);
           }
-          res.status(200).json(returnJson);
-        });
+          return 'done'
+        }
 
+        getLikers(memories.length).then(() => {
+            getCommenters(memories.length).then(() => {
+              for (var i = 0; i < memories.length; i++) {
+                var memory = memories[i];
+                var newMemory = {};
+                newMemory['mem_id']    = memory['id'];
+                newMemory['user_id']   = memory['User']['id'];
+                newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+                newMemory['land_id']   = memory['Landmark']['id'];
+                newMemory['land_name'] = memory['Landmark']['name'];
+                newMemory['image']     = memory['image_url'];
+                newMemory['content']   = memory['description'];
+                newMemory['date']      = memory['createdAt'];
+                newMemory['featured']  = memory['featured']
+                newMemory['likes'] = likers[i].length;
+                newMemory['comment_count'] = commenters[i].length;
+                returnJson['data'].push(newMemory);
+              }
+              res.status(200).json(returnJson);
+            })
+        })
       })
       .catch(err => res.status(400).send(err));
   },
@@ -237,59 +247,153 @@ module.exports = {
     var returnJson = {};
     returnJson.data = [];
     returnJson.errors = [];
-    return Memory
+    var limit = req.body.limit || 20;
+    return Like
       .findAll({
-        attributes: ['id', 'description', 'image_url', 'createdAt', 'featured'],
-        include: [
-          {
-            model: Landmark,
-            attributes: ['id', 'name']
-          },
-          {
-            model: User,
-            attributes: ['id', 'first_name', 'last_name']
-          }
-        ],
-        where: { featured: true },
-        raw: false,
+        attributes: [['memoryId', 'mem_id'],[sequelize.fn('COUNT', sequelize.col('userId')), 'likes']],
+        group: 'memoryId',
         order: [
-          ['createdAt', 'DESC']
-        ]
+          [sequelize.col('likes'), 'DESC']
+        ],
+        limit: limit
       })
-      .then(memories => {
+      .then(likes => {
+
+        var featuredMemories = [];
         var likers = [];
+        var commenters = [];
+
+        const fetchFeaturedMemories = async n => {
+          for (let i = 0; i < n; i++) {
+            const x = await Memory.findById(likes[i]['dataValues']['mem_id'], {
+              attributes: ['id', 'description', 'image_url', 'createdAt', 'featured'],
+              include: [
+                {
+                  model: Landmark,
+                  attributes: ['id', 'name']
+                },
+                {
+                  model: User,
+                  attributes: ['id', 'first_name', 'last_name'],
+                },
+              ]
+            });
+            featuredMemories.push(x);
+          }
+          return 'done'
+        }
 
         const getLikers = async n =>
         {
           for (let i = 0; i < n; i++) {
-            const x = await memories[i].getUsers();
+            const x = await featuredMemories[i].getUsers();
             likers.push(x);
           }
           return 'done'
         }
 
-        getLikers(memories.length).then(() => {
-          // console.log(likes);
-          for (var i = 0; i < memories.length; i++) {
-            var memory = memories[i];
-            var newMemory = {};
-            newMemory['mem_id']    = memory['id'];
-            newMemory['user_id']   = memory['User']['id'];
-            newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-            newMemory['land_id']   = memory['Landmark']['id'];
-            newMemory['land_name'] = memory['Landmark']['name'];
-            newMemory['image']     = memory['image_url'];
-            newMemory['content']   = memory['description'];
-            newMemory['date']      = memory['createdAt'];
-            newMemory['featured']  = memory['featured']
-            // newMemory['likers']    = likers[i];
-            newMemory['likes'] = likers[i].length;
-            returnJson['data'].push(newMemory);
+        const getCommenters = async n => {
+          for (let i = 0; i < n; i++) {
+            const x = await featuredMemories[i].getCommenters();
+            commenters.push(x);
           }
-          res.status(200).json(returnJson);
-        });
+          return 'done'
+        }
+
+        var returnJson = {};
+        returnJson['data'] = [];
+
+        fetchFeaturedMemories(likes.length).then(() => {
+          getLikers(featuredMemories.length).then(() => {
+            getCommenters(featuredMemories.length).then(() => {
+              for (var i = 0; i < featuredMemories.length; i++) {
+                var memory = featuredMemories[i];
+                var newMemory = {};
+                newMemory['mem_id']    = memory['id'];
+                newMemory['user_id']   = memory['User']['id'];
+                newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+                newMemory['land_id']   = memory['Landmark']['id'];
+                newMemory['land_name'] = memory['Landmark']['name'];
+                newMemory['image']     = memory['image_url'];
+                newMemory['content']   = memory['description'];
+                newMemory['date']      = memory['createdAt'];
+                newMemory['featured']  = memory['featured']
+                newMemory['likes'] = likers[i].length;
+                newMemory['comment_count'] = commenters[i].length;
+                returnJson['data'].push(newMemory);
+              }
+              res.status(200).json(returnJson);
+            })
+          })
+        })
       })
-      .catch(err => res.status(400).send(err));
+      .catch(err => {
+        console.log(`Errors: ${err}`);
+        res.status(400).send(err);
+      })
+    // return Memory
+    //   .findAll({
+    //     attributes: ['id', 'description', 'image_url', 'createdAt', 'featured'],
+    //     include: [
+    //       {
+    //         model: Landmark,
+    //         attributes: ['id', 'name']
+    //       },
+    //       {
+    //         model: User,
+    //         attributes: ['id', 'first_name', 'last_name']
+    //       }
+    //     ],
+    //     // where: { featured: true },
+    //     // raw: false,
+    //     order: [
+    //       ['createdAt', 'DESC']
+    //     ]
+    //   })
+    //   .then(memories => {
+    //     var likers = [];
+    //     var commenters = [];
+    //
+    //     const getLikers = async n =>
+    //     {
+    //       for (let i = 0; i < n; i++) {
+    //         const x = await memories[i].getUsers();
+    //         likers.push(x);
+    //       }
+    //       return 'done'
+    //     }
+    //
+    //     const getCommenters = async n => {
+    //       for (let i = 0; i < n; i++) {
+    //         const x = await memories[i].getCommenters();
+    //         commenters.push(x);
+    //       }
+    //       return 'done'
+    //     }
+    //
+    //     getLikers(memories.length).then(() => {
+    //       getCommenters(memories.length).then(() => {
+    //         for (var i = 0; i < memories.length; i++) {
+    //           var memory = memories[i];
+    //           var newMemory = {};
+    //           newMemory['mem_id']    = memory['id'];
+    //           newMemory['user_id']   = memory['User']['id'];
+    //           newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+    //           newMemory['land_id']   = memory['Landmark']['id'];
+    //           newMemory['land_name'] = memory['Landmark']['name'];
+    //           newMemory['image']     = memory['image_url'];
+    //           newMemory['content']   = memory['description'];
+    //           newMemory['date']      = memory['createdAt'];
+    //           newMemory['featured']  = memory['featured']
+    //           newMemory['likes'] = likers[i].length;
+    //           newMemory['comment_count'] = commenters[i].length;
+    //           returnJson['data'].push(newMemory);
+    //         }
+    //         res.status(200).json(returnJson);
+    //       })
+    //     });
+    //   })
+    //   .catch(err => res.status(400).send(err));
   },
   listAll(req, res) {
     return Memory
@@ -390,10 +494,6 @@ module.exports = {
           // TODO: Error!
         }
         selectedMemory = memory;
-        return memory
-          .getUsers() // get likers
-      })
-      .then(users => {
         returnJson['mem_id']    = selectedMemory['id'];
         returnJson['user_id']   = selectedMemory['User']['id'];
         returnJson['user_name'] = selectedMemory['User']['first_name'] + ' ' +  selectedMemory['User']['last_name'];
@@ -403,7 +503,24 @@ module.exports = {
         returnJson['content']   = selectedMemory['description'];
         returnJson['date']      = selectedMemory['createdAt'];
         returnJson['featured']  = selectedMemory['featured']
+        return memory
+          .getUsers()
+        })
+      .then(users => {
         returnJson['likes'] = users.length;
+        return selectedMemory
+          .getCommenters()
+      })
+      .then(commenters => {
+        returnJson['comments'] = []
+        commenters.forEach(commenter => {
+          var newComment = {};
+          newComment['user_name'] = commenter['first_name'] + ' ' + commenter['last_name']
+          newComment['timestamp'] = commenter['Comment']['createdAt'];
+          newComment['message'] = commenter['Comment']['message'];
+          returnJson['comments'].push(newComment)
+        })
+        returnJson['comment_count'] = returnJson['comments'].length;
         res.status(200).json(returnJson);
       })
   }
