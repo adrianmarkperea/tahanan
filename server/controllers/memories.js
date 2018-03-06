@@ -27,7 +27,6 @@ module.exports = {
     var hasImage = req.files ? true : false;
     console.log(`Has Image: ${hasImage}`)
     if (hasImage) {
-      console.log(`Image Name: ${req.files.memoryImage.name}`)
       if (req.files.memoryImage === null) {
         hasImage = false
       }
