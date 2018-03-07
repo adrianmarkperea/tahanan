@@ -165,7 +165,16 @@ module.exports = {
             newMemory['content']   = memory['description'];
             newMemory['date']      = memory['createdAt'];
             newMemory['featured']  = memory['featured']
-            // newMemory['likers']    = likers[i];
+            newMemory['liker_ids'] = [];
+            likers[i].forEach(liker => {
+              newMemory['liker_ids'].push(liker['dataValues']['id']);
+            })
+            newMemory['liked'] = false;
+            newMemory['liker_ids'].forEach(id => {
+              if (id === req['user']['id']) {
+                newMemory['liked'] = true;
+              }
+            });
             newMemory['likes'] = likers[i].length;
             returnJson['data'].push(newMemory);
           }
