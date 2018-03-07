@@ -5,10 +5,12 @@ const verifier = require('../../libs/verifier');
 // api/users/:userId
 // REQ
 // {
+//   first_name: 'string'
+//   last_name: 'string'
 //   bio: 'string',
 //   profileImage: 'multiform'
 // }
-
+// TODO: add first_name and last_name, fix profileImage detection
 
 module.exports = {
   update(req, res) {
@@ -16,6 +18,9 @@ module.exports = {
     returnJson['errors'] = [];
     var bio = req.body.bio;
     var profile_pic_image = req.files ? req.files.profileImage : null;
+    if (req.files.profileImage === undefined || req.files.profileImage === null) {
+      profile_pic_image = null;
+    }
     var profile_pic_url = null;
 
     return User

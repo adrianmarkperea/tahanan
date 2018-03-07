@@ -6,7 +6,6 @@ const path   = require('path');
 const imageFactory = require('../../libs/image-factory');
 const sequelize = require('sequelize');
 
-
 module.exports = {
   create(req, res) {
 
@@ -239,6 +238,12 @@ module.exports = {
                 likers[i].forEach(liker => {
                   newMemory['liker_ids'].push(liker['dataValues']['id']);
                 })
+                newMemory['liked'] = false;
+                newMemory['liker_ids'].forEach(id => {
+                  if (id === req['user']['id']) {
+                    newMemory['liked'] = true;
+                  }
+                });
                 returnJson['data'].push(newMemory);
               }
               res.status(200).json(returnJson);
@@ -327,6 +332,12 @@ module.exports = {
                 likers[i].forEach(liker => {
                   newMemory['liker_ids'].push(liker['dataValues']['id']);
                 })
+                newMemory['liked'] = false;
+                newMemory['liker_ids'].forEach(id => {
+                  if (id === req['user']['id']) {
+                    newMemory['liked'] = true;
+                  }
+                })
                 newMemory['comment_count'] = commenters[i].length;
                 returnJson['data'].push(newMemory);
               }
@@ -339,69 +350,6 @@ module.exports = {
         console.log(`Errors: ${err}`);
         res.status(400).send(err);
       })
-    // return Memory
-    //   .findAll({
-    //     attributes: ['id', 'description', 'image_url', 'createdAt', 'featured'],
-    //     include: [
-    //       {
-    //         model: Landmark,
-    //         attributes: ['id', 'name']
-    //       },
-    //       {
-    //         model: User,
-    //         attributes: ['id', 'first_name', 'last_name']
-    //       }
-    //     ],
-    //     // where: { featured: true },
-    //     // raw: false,
-    //     order: [
-    //       ['createdAt', 'DESC']
-    //     ]
-    //   })
-    //   .then(memories => {
-    //     var likers = [];
-    //     var commenters = [];
-    //
-    //     const getLikers = async n =>
-    //     {
-    //       for (let i = 0; i < n; i++) {
-    //         const x = await memories[i].getUsers();
-    //         likers.push(x);
-    //       }
-    //       return 'done'
-    //     }
-    //
-    //     const getCommenters = async n => {
-    //       for (let i = 0; i < n; i++) {
-    //         const x = await memories[i].getCommenters();
-    //         commenters.push(x);
-    //       }
-    //       return 'done'
-    //     }
-    //
-    //     getLikers(memories.length).then(() => {
-    //       getCommenters(memories.length).then(() => {
-    //         for (var i = 0; i < memories.length; i++) {
-    //           var memory = memories[i];
-    //           var newMemory = {};
-    //           newMemory['mem_id']    = memory['id'];
-    //           newMemory['user_id']   = memory['User']['id'];
-    //           newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
-    //           newMemory['land_id']   = memory['Landmark']['id'];
-    //           newMemory['land_name'] = memory['Landmark']['name'];
-    //           newMemory['image']     = memory['image_url'];
-    //           newMemory['content']   = memory['description'];
-    //           newMemory['date']      = memory['createdAt'];
-    //           newMemory['featured']  = memory['featured']
-    //           newMemory['likes'] = likers[i].length;
-    //           newMemory['comment_count'] = commenters[i].length;
-    //           returnJson['data'].push(newMemory);
-    //         }
-    //         res.status(200).json(returnJson);
-    //       })
-    //     });
-    //   })
-    //   .catch(err => res.status(400).send(err));
   },
   listAll(req, res) {
     return Memory
@@ -481,6 +429,7 @@ module.exports = {
       })
   },
   retrieveMemory(req, res) {
+    console.log(`User: ${req['user']}`);
     var returnJson = {};
     var selectedMemory;
     return Memory
@@ -520,7 +469,13 @@ module.exports = {
         users.forEach(user => {
           returnJson['liker_ids'].push(user['dataValues']['id']);
         })
-        console.log(users);
+        returnJson['liked'] = false;
+        returnJson['liker_ids'].forEach(id => {
+          if (id === req['user']['id']) {
+            returnJson['liked'] = true;
+          }
+        })
+        // console.log(users);
         return selectedMemory
           .getCommenters()
       })
