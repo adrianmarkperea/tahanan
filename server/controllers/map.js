@@ -1,6 +1,7 @@
 const Governorate = require('../models').Governorate;
 const City        = require('../models').City;
 const Landmark    = require('../models').Landmark;
+const Memory      = require('../models').Memory;
 
 module.exports = {
   getMap(req, res) {
@@ -38,10 +39,16 @@ module.exports = {
         return Landmark
           .findAll({
             attributes: { exclude: ['createdAt', 'updatedAt'] },
-            include: [{
-              model: City,
-              attributes: ['governorateId']
-            }]
+            include: [
+              {
+                model: City,
+                attributes: ['governorateId']
+              },
+              {
+                model: Memory,
+                as: 'Memories'
+              }
+            ]
           })
       })
       .then(landmarks => {
@@ -56,6 +63,7 @@ module.exports = {
           newLandmark['lat']      = landmark['lat'];
           newLandmark['lng']      = landmark['lng'];
           newLandmark['backdrop'] = landmark['image_url'];
+          newLandmark['memory_count'] = landmark['Memories'].length;
           returnJson['landmarks'].push(newLandmark);
         });
         return res.status(200).json(returnJson);
