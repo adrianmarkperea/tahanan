@@ -379,7 +379,10 @@ module.exports = {
       })
       .then(like => {
         console.log(like);
-        res.status(200).json(like);
+        var returnJson = {};
+        returnJson['message'] = 'liked';
+        returnJson['for_mike'] = 'please just add 1 to the likes in the front end hehe';
+        res.status(200).send(returnJson);
       })
       .catch(err => {
         // User has already liked the memory
@@ -395,7 +398,10 @@ module.exports = {
             .then(delRes => {
               console.log(delRes);
               if (delRes === 1) {
-                  res.status(200).send('unliked');
+                var returnJson = {};
+                returnJson['message'] = 'unliked';
+                returnJson['for_mike'] = 'please just subtract 1 to the likes in the front end hehe';
+                res.status(200).send(returnJson);
               }
             })
             .catch(err => {
