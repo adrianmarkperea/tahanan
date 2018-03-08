@@ -2,6 +2,16 @@ const User = require('../models').User;
 const imageFactory = require('../../libs/image-factory');
 const verifier = require('../../libs/verifier');
 
+function extractUserData(user) {
+  var returnJson = {};
+  returnJson.userId     = user['id'];
+  returnJson.name = user['first_name'] + ' ' + user['last_name'];
+  returnJson.email = user['email'];
+  returnJson.bio = user['bio'];
+  returnJson.image_url = user['profile_pic_url'];
+  return returnJson;
+}
+
 // api/users/:userId
 // REQ
 // {
@@ -13,6 +23,20 @@ const verifier = require('../../libs/verifier');
 // TODO: add first_name and last_name, fix profileImage detection
 
 module.exports = {
+  retrieve(req, res) {
+    var returnJson = {};
+    returnJson['errors'] = [];
+    var userId = req.params.userId;
+    User
+      .findById(userId)
+      .then(user => {
+        if (!user) {
+          // TODO: ERROR!!!
+        }
+        returnJson['data'] = extractUserData(user);
+        res.status(200).json(returnJson);
+      })
+  },
   update(req, res) {
     var returnJson = {};
     returnJson['errors'] = [];
