@@ -265,46 +265,33 @@ module.exports = {
     var returnJson = {};
     returnJson.data = [];
     returnJson.errors = [];
-    var limit = req.body.limit || 20;
-    return Like
+    limit = req.body.limit || 20;
+    return Memory
       .findAll({
-        attributes: [['memoryId', 'mem_id'],[sequelize.fn('COUNT', sequelize.col('userId')), 'likes']],
-        group: 'memoryId',
-        order: [
-          [sequelize.col('likes'), 'DESC']
+        attributes: ['id', 'description', 'image_url', 'createdAt', 'featured'],
+        include: [
+          {
+            model: Landmark,
+            attributes: ['id', 'name']
+          },
+          {
+            model: User,
+            attributes: ['id', 'first_name', 'last_name'],
+          },
         ],
-        limit: limit
+        order: [
+          ['createdAt', 'DESC']
+        ],
+        raw: false
       })
-      .then(likes => {
-
-        var featuredMemories = [];
+      .then(memories => {
         var likers = [];
         var commenters = [];
-
-        const fetchFeaturedMemories = async n => {
-          for (let i = 0; i < n; i++) {
-            const x = await Memory.findById(likes[i]['dataValues']['mem_id'], {
-              attributes: ['id', 'description', 'image_url', 'createdAt', 'featured'],
-              include: [
-                {
-                  model: Landmark,
-                  attributes: ['id', 'name']
-                },
-                {
-                  model: User,
-                  attributes: ['id', 'first_name', 'last_name'],
-                },
-              ]
-            });
-            featuredMemories.push(x);
-          }
-          return 'done'
-        }
 
         const getLikers = async n =>
         {
           for (let i = 0; i < n; i++) {
-            const x = await featuredMemories[i].getUsers();
+            const x = await memories[i].getUsers();
             likers.push(x);
           }
           return 'done'
@@ -312,20 +299,18 @@ module.exports = {
 
         const getCommenters = async n => {
           for (let i = 0; i < n; i++) {
-            const x = await featuredMemories[i].getCommenters();
+            const x = await memories[i].getCommenters();
             commenters.push(x);
           }
           return 'done'
         }
 
-        var returnJson = {};
-        returnJson['data'] = [];
+        var allMemories = [];
 
-        fetchFeaturedMemories(likes.length).then(() => {
-          getLikers(featuredMemories.length).then(() => {
-            getCommenters(featuredMemories.length).then(() => {
-              for (var i = 0; i < featuredMemories.length; i++) {
-                var memory = featuredMemories[i];
+        getLikers(memories.length).then(() => {
+            getCommenters(memories.length).then(() => {
+              for (var i = 0; i < memories.length; i++) {
+                var memory = memories[i];
                 var newMemory = {};
                 newMemory['mem_id']    = memory['id'];
                 newMemory['user_id']   = memory['User']['id'];
@@ -337,6 +322,7 @@ module.exports = {
                 newMemory['date']      = memory['createdAt'];
                 newMemory['featured']  = memory['featured']
                 newMemory['likes'] = likers[i].length;
+                newMemory['comment_count'] = commenters[i].length;
                 newMemory['liker_ids'] = [];
                 likers[i].forEach(liker => {
                   newMemory['liker_ids'].push(liker['dataValues']['id']);
@@ -346,19 +332,18 @@ module.exports = {
                   if (id === req['user']['id']) {
                     newMemory['liked'] = true;
                   }
-                })
-                newMemory['comment_count'] = commenters[i].length;
-                returnJson['data'].push(newMemory);
+                });
+                allMemories.push(newMemory);
               }
+              // Sort by most likes to least likes
+              allMemories.sort((a, b) => a.likes > b.likes ? -1 : a.likes < b.likes ? 1 : a.date > b.date ? -1 : a.date < b.date ? 1 : 0);
+              // Limit to the number of featured memories (default: 20)
+              returnJson['data'] = allMemories.slice(0, limit);
               res.status(200).json(returnJson);
             })
-          })
         })
       })
-      .catch(err => {
-        console.log(`Errors: ${err}`);
-        res.status(400).send(err);
-      })
+      .catch(err => res.status(400).send(err));
   },
   listAll(req, res) {
     return Memory
