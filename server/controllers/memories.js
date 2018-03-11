@@ -7,6 +7,10 @@ const path   = require('path');
 const imageFactory = require('../../libs/image-factory');
 const sequelize = require('sequelize');
 
+function generateUrl(landmarkId) {
+  return `http://res.cloudinary.com/higid3pm1/image/upload/v1520763492/stills/${landmarkId}-still.png`;
+}
+
 module.exports = {
   create(req, res) {
 
@@ -68,9 +72,12 @@ module.exports = {
               newMemory['mem_id']    = memory['id'];
               newMemory['user_id']   = memory['User']['id'];
               newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+              newMemory['first_name'] = memory['User']['first_name'];
+              newMemory['last_name'] = memory['User']['last_name'];
               newMemory['land_id']   = memory['Landmark']['id'];
               newMemory['land_name'] = memory['Landmark']['name'];
               newMemory['image']     = memory['image_url'];
+              newMemory['default_image'] = generateUrl(memory['Landmark']['id']);
               newMemory['content']   = memory['description'];
               newMemory['date']      = memory['createdAt'];
               newMemory['featured']  = memory['featured']
@@ -107,9 +114,12 @@ module.exports = {
           newMemory['mem_id']    = memory['id'];
           newMemory['user_id']   = memory['User']['id'];
           newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+          newMemory['first_name'] = memory['User']['first_name'];
+          newMemory['last_name'] = memory['User']['last_name'];
           newMemory['land_id']   = memory['Landmark']['id'];
           newMemory['land_name'] = memory['Landmark']['name'];
           newMemory['image']     = memory['image_url'];
+          newMemory['default_image'] = generateUrl(memory['Landmark']['id']);
           newMemory['content']   = memory['description'];
           newMemory['date']      = memory['createdAt'];
           newMemory['featured']  = memory['featured']
@@ -164,6 +174,7 @@ module.exports = {
             newMemory['land_id']   = memory['Landmark']['id'];
             newMemory['land_name'] = memory['Landmark']['name'];
             newMemory['image']     = memory['image_url'];
+            newMemory['default_image'] = generateUrl(memory['Landmark']['id']);
             newMemory['content']   = memory['description'];
             newMemory['date']      = memory['createdAt'];
             newMemory['featured']  = memory['featured']
@@ -241,6 +252,7 @@ module.exports = {
                 newMemory['profile_pic_url'] = memory['User']['profile_pic_url'];
                 newMemory['land_id']   = memory['Landmark']['id'];
                 newMemory['land_name'] = memory['Landmark']['name'];
+                newMemory['default_image'] = generateUrl(memory['Landmark']['id']);
                 newMemory['image']     = memory['image_url'];
                 newMemory['content']   = memory['description'];
                 newMemory['date']      = memory['createdAt'];
@@ -322,6 +334,7 @@ module.exports = {
                 newMemory['profile_pic_url'] = memory['User']['profile_pic_url'];
                 newMemory['land_id']   = memory['Landmark']['id'];
                 newMemory['land_name'] = memory['Landmark']['name'];
+                newMemory['default_image'] = generateUrl(memory['Landmark']['id']);
                 newMemory['image']     = memory['image_url'];
                 newMemory['content']   = memory['description'];
                 newMemory['date']      = memory['createdAt'];
@@ -462,6 +475,7 @@ module.exports = {
         returnJson['profile_pic_url'] = selectedMemory['User']['profile_pic_url'];
         returnJson['land_id']   = selectedMemory['Landmark']['id'];
         returnJson['land_name'] = selectedMemory['Landmark']['name'];
+        returnJson['default_image'] = generateUrl(memory['Landmark']['id']);
         returnJson['image']     = selectedMemory['image_url'];
         returnJson['content']   = selectedMemory['description'];
         returnJson['date']      = selectedMemory['createdAt'];

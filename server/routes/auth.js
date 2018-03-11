@@ -5,6 +5,7 @@ function extractUserData(user) {
   var returnJson = {};
   returnJson['data'] = {};
   returnJson['data']['userId']     = user['id'];
+  returnJson['data']['user_name']  = user['first_name'] + ' ' + user['last_name'];        
   returnJson['data']['first_name'] = user['first_name'];
   returnJson['data']['last_name']  = user['last_name'];
   returnJson['data']['email']      = user['email'];
