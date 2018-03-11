@@ -70,37 +70,135 @@
 "use strict";
 
 
-var jQuery = __webpack_require__(1);
+var jQuery = __webpack_require__(2);
 var config = __webpack_require__(13);
 //我不要去课
 module.exports = function api(method, endpoint) {
   var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var json = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+
+  var toPass = {
+    data: data,
+    method: method,
+    xhrFields: {
+      withCredentials: true
+    },
+    dataType: "json",
+    crossDomain: true
+  };
+
+  if (!json) {
+    toPass.processData = false;
+    toPass.contentType = false;
+  }
 
   console.log("API REQUEST: " + endpoint);
+
   return new Promise(function (resolve, reject) {
     var url = config.api + "/" + endpoint;
-    jQuery.ajax(url, {
-      data: data,
-      method: method,
-      xhrFields: {
-        withCredentials: true
-      },
-      dataType: "json",
-      crossDomain: true,
-      processData: false,
-      contentType: false,
-      success: function success(data) {
-        if ((data.errors || []).length) reject(data);else resolve(data);
-      },
-      error: function error(a, b, c) {
-        reject(a, b, c);
-      }
-    });
+
+    toPass.success = function (data) {
+      if ((data.errors || []).length) reject(data.errors);else resolve(data);
+    };
+
+    toPass.error = function (a, b, c) {
+      reject(a, b, c);
+    };
+
+    jQuery.ajax(url, toPass);
   });
 };
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var api = __webpack_require__(0);
+
+var events = [];
+var app = module.exports = {
+  data: {
+    user: {},
+    map: {}
+  },
+  user: null,
+  trigger: function trigger(type) {
+    var args = [];
+
+    for (var i = 1; i < arguments.length; i++) {
+      args.push(arguments[i]);
+    }
+
+    events.filter(function (e) {
+      return e.type == type;
+    }).forEach(function (e) {
+      return e.callback.apply(null, args);
+    });
+  },
+  on: function on(type, callback) {
+    events.push({ type: type, callback: callback });
+  },
+  isLoggedIn: function isLoggedIn() {
+    return !!this.data.user.loggedIn;
+  },
+  signOut: function signOut() {
+    api("GET", "auth/signout").then(function (data) {
+      getUser();
+    }).catch(function (e) {});
+  },
+
+  getMapData: getMapData,
+  getUser: getUser,
+  init: init
+};
+
+function getMapData() {
+  console.log("Getting map data!");
+  api("GET", "map").then(function (data) {
+    console.log("Map data loaded!");
+    app.data.map = data;
+    app.trigger("map-data", data);
+    app.trigger("ready", app.data);
+  }).catch(function (e) {
+    app.trigger("map-data", e);
+  });
+}
+
+function getUser() {
+  console.log("Getting user data!");
+  api("GET", "auth/me").then(function (data) {
+    console.log("Logged in!");
+    app.data.user = data;
+    app.trigger("user", data);
+  }).catch(function (data) {
+    console.log("Not logged in!");
+    app.data.user = {};
+    app.trigger("user", data);
+  });
+}
+
+function init() {
+  console.log("App is initializing");
+  getUser();
+}
+
+app.on("user", function (data) {
+  getMapData();
+});
+
+app.on("ready", function (data) {
+  console.log("App is ready!");
+  console.log(data);
+});
+
+init();
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10471,90 +10569,6 @@ return jQuery;
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var api = __webpack_require__(0);
-
-var events = [];
-var app = module.exports = {
-  data: {},
-  user: null,
-  trigger: function trigger(type) {
-    var args = [];
-
-    for (var i = 1; i < arguments.length; i++) {
-      args.push(arguments[i]);
-    }
-
-    events.filter(function (e) {
-      return e.type == type;
-    }).forEach(function (e) {
-      return e.callback.apply(null, args);
-    });
-  },
-  on: function on(type, callback) {
-    events.push({ type: type, callback: callback });
-  },
-  isLoggedIn: function isLoggedIn() {
-    return !!this.data.user.loggedIn;
-  },
-  signOut: function signOut() {
-    api("GET", "auth/signout").then(function (data) {
-      getUser();
-    }).catch(function (e) {});
-  },
-
-  getMapData: getMapData,
-  getUser: getUser,
-  init: init
-};
-
-function getMapData() {
-  console.log("Getting map data!");
-  api("GET", "map").then(function (data) {
-    console.log("Map data loaded!");
-    app.data.map = data;
-    app.trigger("map-data", data);
-    app.trigger("ready", app.data);
-  }).catch(function (e) {
-    app.trigger("map-data", e);
-  });
-}
-
-function getUser() {
-  console.log("Getting user data!");
-  api("GET", "auth/me").then(function (data) {
-    console.log("Logged in!");
-    app.data.user = data;
-    app.trigger("user", data);
-  }).catch(function (data) {
-    console.log("Not logged in!");
-    app.data.user = {};
-    app.trigger("user", data);
-  });
-}
-
-function init() {
-  console.log("App is initializing");
-  getUser();
-}
-
-app.on("user", function (data) {
-  getMapData();
-});
-
-app.on("ready", function (data) {
-  console.log("App is ready!");
-  console.log(data);
-});
-
-init();
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10565,7 +10579,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var jQuery = __webpack_require__(1);
+var jQuery = __webpack_require__(2);
 
 module.exports = function () {
   function _class(id) {
@@ -10621,14 +10635,20 @@ module.exports = function () {
   }, {
     key: "show",
     value: function show() {
+      this.trigger("show");
+
       this.$wrapper.addClass("visible");
       this.$wrapper.removeClass("hidden");
     }
   }, {
     key: "close",
     value: function close() {
+      this.trigger("close");
+
       this.$wrapper.removeClass("visible");
       this.$wrapper.addClass("hidden");
+
+      if (this.onclose) this.onclose();
     }
   }]);
 
@@ -10644,15 +10664,23 @@ module.exports = function () {
 
 var Modal = __webpack_require__(3);
 var api = __webpack_require__(0);
-var generalError = __webpack_require__(19);
-
+var generalError = __webpack_require__(20);
+var app = __webpack_require__(1);
+var router = __webpack_require__(5);
 var modal = module.exports = new Modal("view-memory");
 
 modal.setMemoryId = function (id) {
   modal.memoryId = id;
 };
 
-var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "Descember"];
+modal.$form = modal.$wrapper.find("form");
+
+var $userId = modal.$form.find("input[name=userId]");
+var $content = modal.$form.find("textarea[name=description]");
+var $comments = modal.$wrapper.find(".comments");
+var $landmarkName = modal.$wrapper.find(".landmark");
+
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 modal.load = function (id) {
   if (id) modal.setMemoryId(id);
@@ -10661,18 +10689,85 @@ modal.load = function (id) {
   api("GET", 'memories/' + modal.memoryId).then(function (memory) {
     modal.part("content");
     modal.$wrapper.find(".author").html(memory.user_name);
-    modal.$wrapper.find(".landmark").html(memory.land_name);
+    modal.$wrapper.find("input[name=userId]").val(app.data.user.userId);
+    modal.$wrapper.find("input[name=message]").val("");
+    $comments.html("");
+    $landmarkName.html(memory.land_name);
+    $landmarkName.off("click");
+    $landmarkName.on("click", function (e) {
+      router.navigate("/landmarks/" + memory.land_id);
+      modal.close();
+    });
     modal.$wrapper.find(".body").html(memory.content);
-    modal.$wrapper.find(".likes .text").html(memory.likes + ' people like this');
     var date = new Date(memory.date);
     modal.$wrapper.find(".date .text").html(months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear());
-    var image = !!memory.image ? '<img src="' + memory.image + '" />' : "";
+    var image = memory.image != "none" ? '<img src="' + memory.image + '" />' : "";
     modal.$wrapper.find(".image-wrapper").html(image);
+
+    //likes
+
+    var liked = !!memory.liked;
+    var likes = memory.likes || 0;
+
+    var $likes = modal.$wrapper.find(".detail.likes");
+    $likes.off("click");
+    var $likesText = $likes.find(".text");
+
+    function updateLikes() {
+      $likesText.text(likes == 1 ? likes + ' person liked this' : likes + ' people liked this');
+
+      if (liked) {
+        $likes.removeClass("liked");
+      } else {
+        $likes.addClass("liked");
+      }
+    }
+
+    updateLikes();
+
+    $likes.on("click", function (e) {
+      if (liked) {
+        likes--;
+      } else {
+        likes++;
+      }
+      liked = !liked;
+      updateLikes();
+
+      api("POST", 'memories/' + memory.mem_id + '/likes', {
+        userId: app.data.user.userId
+      }, true).then(function (data) {
+        updateLikes();
+      }).catch(function (data) {});
+    });
+
+    //comments
+    console.log($comments);
+
+    memory.comments.forEach(function (comment) {
+      console.log(comment);
+      $comments.append('<div class="comment">\n        <div class="icon" style="background-image: url()"></div>\n        <div class="text">\n          <div class="author">' + comment.user_name + '</div>\n          <div class="message">' + comment.message + '</div>\n        </div>\n      </div>');
+    });
   }).catch(function (e) {
     alert("Something went wrong!");
+    console.log(e);
     modal.close();
   });
 };
+
+modal.$form.find("button").click(function (e) {
+  modal.part("loading");
+  var data = new FormData(modal.$form[0]);
+  console.log(data);
+  api('POST', 'memories/' + modal.memoryId + '/comments', data).then(function (data) {
+    modal.load();
+  }).catch(function (e) {
+    modal.part("comtent");
+    alert("Something went wrong! Try again!");
+  });
+
+  e.preventDefault();
+});
 
 /***/ }),
 /* 5 */
@@ -10695,20 +10790,31 @@ module.exports = router;
 
 var Modal = __webpack_require__(3);
 var api = __webpack_require__(0);
-var app = __webpack_require__(2);
+var app = __webpack_require__(1);
 
 var modal = module.exports = new Modal("make-memory");
 
 modal.$form = modal.$wrapper.find("form");
 
+var $landmarkId = modal.$form.find("input[name=landmarkId]");
+var $userId = modal.$form.find("input[name=userId]");
+var $landmarkName = modal.$form.find(".landmark");
+var $author = modal.$form.find(".author");
+var $content = modal.$form.find("textarea[name=description]");
+
+modal.on("show", function () {
+  $content.val("");
+  modal.$form.find("input[type=file]").val("");
+});
+
 modal.setLandmark = function (landmark) {
   this.landmark = landmark;
   console.log(this.landmark);
-  modal.$form.find("input[name=landmarkId]").attr("value", landmark.land_id);
-  modal.$form.find("input[name=userId]").attr("value", app.data.user.userId);
+  $landmarkId.val(landmark.land_id);
+  $userId.val(app.data.user.userId);
   console.log(modal.$form.find(".landmark"));
-  modal.$form.find(".landmark").html(landmark.name);
-  modal.$form.find(".author").html(app.data.user.name);
+  $landmarkName.html(landmark.name);
+  $author.html(app.data.user.name);
   modal.part("form");
 };
 
@@ -10722,6 +10828,7 @@ modal.$form.find("button").click(function (e) {
   }).catch(function (e) {
     modal.part("form");
     alert("Something went wrong! Try again!");
+    console.log(e);
   });
 
   e.preventDefault();
@@ -10734,13 +10841,55 @@ modal.$form.find("button").click(function (e) {
 "use strict";
 
 
-var jQuery = __webpack_require__(1);
+var jQuery = __webpack_require__(2);
+var api = __webpack_require__(0);
+var app = __webpack_require__(1);
 
 module.exports = function (memory) {
-  var $memory = jQuery("<div class=\"memory\"></div>");
+  var $memory = jQuery('<div class="memory"></div>');
   var limit = 100;
-  var content = memory.content.length > limit ? memory.content.substr(0, limit) + "..." : memory.content;
-  $memory.html("<div class=\"image-wrapper\">\n    <div class=\"sizer\"></div>\n    <div class=\"image\" style=\"background-image:url(" + memory.image + ")\"></div>\n    <div class=\"content\">" + content + "</div>\n  </div>\n  <div class=\"details-wrapper\">\n    <div class=\"detail likes\">\n      <div class=\"icon\"></div>\n      <div class=\"text\">" + (memory.likes || 0) + "</div>\n    </div>\n    <div class=\"detail comments\">\n      <div class=\"icon\"></div>\n      <div class=\"text\">" + (memory.comments || 0) + "</div>\n    </div>\n  </div>");
+  var content = '\u201C' + memory.content + '\u201D';
+  content = content.length > limit ? content.substr(0, limit) + "..." : content;
+
+  $memory.addClass(["texture-a", "texture-b", "texture-c"][Math.floor(Math.random() * 3)]);
+
+  var liked = !!memory.liked;
+  var likes = memory.likes || 0;
+
+  var style = memory.image != "none" ? 'style="background-image:url(' + memory.image + ')"' : "";
+
+  $memory.html('<div class="image-wrapper">\n    <div class="sizer"></div>\n    <div class="image" ' + style + '></div>\n    <div class="content">' + content + '</div>\n  </div>\n  <div class="details-wrapper">\n    <div class="detail likes">\n      <div class="icon"></div>\n      <div class="text"></div>\n    </div>\n    <div class="detail comments">\n      <div class="icon"></div>\n      <div class="text">' + (memory.comment_count || 0) + '</div>\n    </div>\n  </div>');
+
+  var $likes = $memory.find(".detail.likes");
+  var $likesText = $likes.find(".text");
+
+  function updateLikes() {
+    $likesText.text(likes);
+
+    if (liked) {
+      $likes.addClass("liked");
+    } else {
+      $likes.removeClass("liked");
+    }
+  }
+
+  updateLikes();
+
+  $likes.on("click", function (e) {
+    if (liked) {
+      likes--;
+    } else {
+      likes++;
+    }
+    liked = !liked;
+    updateLikes();
+
+    api("POST", 'memories/' + memory.mem_id + '/likes', {
+      userId: app.data.user.userId
+    }, true).then(function (data) {
+      updateLikes();
+    }).catch(function (data) {});
+  });
 
   return $memory;
 };
@@ -10754,11 +10903,17 @@ module.exports = function (memory) {
 
 var Modal = __webpack_require__(3);
 var api = __webpack_require__(0);
-var app = __webpack_require__(2);
+var app = __webpack_require__(1);
 
 var modal = module.exports = new Modal("sign-in");
 
 modal.$form = modal.$wrapper.find("#form-sign-in");
+
+modal.on("show", function () {
+  modal.$form.find("input").each(function (i, elem) {
+    elem.value = "";
+  });
+});
 
 modal.$form.find("button").click(function (e) {
   modal.part("loading");
@@ -10783,11 +10938,17 @@ modal.$form.find("button").click(function (e) {
 
 var Modal = __webpack_require__(3);
 var api = __webpack_require__(0);
-var app = __webpack_require__(2);
+var app = __webpack_require__(1);
 
 var modal = module.exports = new Modal("sign-up");
 
 modal.$form = modal.$wrapper.find("#form-sign-up");
+
+modal.on("show", function () {
+  modal.$form.find("input").each(function (i, elem) {
+    elem.value = "";
+  });
+});
 
 modal.$form.find("button").click(function (e) {
   modal.part("loading");
@@ -10817,9 +10978,21 @@ var modal = module.exports = new Modal("edit-profile");
 
 modal.$form = modal.$wrapper.find("form");
 
+modal.open = function () {
+  modal.part("loading");
+  modal.show();
+
+  api("GET", "auth/me").then(function (data) {
+    modal.part("form");
+  }).catch(function (e) {
+    alert("Oops! Could not get your profile. Please try again!");
+    modal.close();
+  });
+};
+
 modal.$form.find("button").click(function (e) {
-  var data = modal.$form.serialize();
-  console.log(data);
+  var data = new FormData(modal.$form[0]);
+
   e.preventDefault();
 });
 
@@ -10845,7 +11018,7 @@ module.exports = function setTitle(title) {
 "use strict";
 
 
-__webpack_require__(2);
+__webpack_require__(1);
 
 __webpack_require__(14);
 
@@ -10854,16 +11027,16 @@ var modalSignUp = __webpack_require__(9);
 var modalViewMemory = __webpack_require__(4);
 var modalMakeMemory = __webpack_require__(6);
 var modalEditProfile = __webpack_require__(10);
-var modals = __webpack_require__(20);
+var modals = __webpack_require__(21);
 
-var jQuery = __webpack_require__(1);
+var jQuery = __webpack_require__(2);
 var setTitle = __webpack_require__(11);
-var setView = __webpack_require__(21);
-var landmark = __webpack_require__(22);
-var _featured = __webpack_require__(23);
-var _meMemories = __webpack_require__(24);
+var setView = __webpack_require__(22);
+var landmark = __webpack_require__(23);
+var _featured = __webpack_require__(24);
+var _meMemories = __webpack_require__(25);
 var api = __webpack_require__(0);
-var app = __webpack_require__(2);
+var app = __webpack_require__(1);
 var globals = {};
 
 var $body = jQuery(document.body);
@@ -10876,6 +11049,8 @@ window.globals = globals = {
   jQuery: jQuery,
   app: app
 };
+
+var setPaths = false;
 
 app.on("ready", function (data) {
   console.log("Setting body class!");
@@ -10891,82 +11066,97 @@ app.on("ready", function (data) {
     return modal.close();
   });
 
-  console.log("Calling resolve!");
-  router.resolve();
+  if (!setPaths) {
+    console.log("Set paths!");
+    router.on({
+      'about': function about(params) {
+        setTitle("About");
+        setView("about");
+      },
+      'about/faq': function aboutFaq(params) {
+        setTitle("About");
+        setView("about-faq");
+      },
+      'about/project': function aboutProject(params) {
+        setTitle("About the Project");
+        setView("about");
+      },
+      'about/content': function aboutContent(params) {
+        setTitle("About");
+        setView("about-content");
+      },
+      'me': function me(params) {
+        if (!app.isLoggedIn()) {
+          router.navigate("/");
+          return false;
+        }
+        setTitle("My Profile");
+        setView("me");
+      },
+      'me/memories': function meMemories(params) {
+        if (!app.isLoggedIn()) {
+          router.navigate("/");
+          return false;
+        }
+        _meMemories.load();
+        setTitle("My Memories");
+        setView("me-memories");
+      },
+      'map': function map(params) {
+        if (!app.isLoggedIn()) {
+          router.navigate("/");
+          return false;
+        }
+        setTitle("Map");
+        setView("map");
+      },
+      'featured': function featured(params) {
+        if (!app.isLoggedIn()) {
+          router.navigate("/");
+          return false;
+        }
+        _featured.load();
+        setTitle("Featured");
+        setView("featured");
+      },
+      'landmarks/:id': function landmarksId(params) {
+        if (!app.isLoggedIn()) {
+          router.navigate("/");
+          return false;
+        }
+        landmark.view(params.id);
+        setView("landmark");
+      },
+      'reload/:id': function reloadId(params) {
+        console.log('Reloading... ' + params.id);
+      },
+      '*': function _(params) {
+        if (app.isLoggedIn()) {
+          router.navigate("/map");
+          return false;
+        }
+        setTitle("Home");
+        setView("landing");
+      }
+    }).resolve();
+
+    setPaths = true;
+  }
+
+  reload();
+});
+
+function reload() {
+  console.log("Reloading route!");
   var h = (window.location.href.match(/\#.*$/gmi) || [""])[0];
-  router.navigate('reload');
+  console.log("Coming from " + window.location.href);
+  router.navigate('/reload/' + Math.floor(Math.random() * 100000));
   setTimeout(function (e) {
     router.navigate(h);
   }, 10);
-});
+}
 
 jQuery(document).ready(function (e) {
-  console.log("Set paths!");
-  router.on({
-    'about': function about(params) {
-      setTitle("About");
-      setView("about");
-    },
-    'about/faq': function aboutFaq(params) {
-      setTitle("About");
-      setView("about-faq");
-    },
-    'about/content': function aboutContent(params) {
-      setTitle("About");
-      setView("about-content");
-    },
-    'me': function me(params) {
-      if (!app.isLoggedIn()) {
-        router.navigate("/");
-        return false;
-      }
-      setTitle("My Profile");
-      setView("me");
-    },
-    'me/memories': function meMemories(params) {
-      if (!app.isLoggedIn()) {
-        router.navigate("/");
-        return false;
-      }
-      _meMemories.load();
-      setTitle("My Memories");
-      setView("me-memories");
-    },
-    'map': function map(params) {
-      if (!app.isLoggedIn()) {
-        router.navigate("/");
-        return false;
-      }
-      setTitle("Map");
-      setView("map");
-    },
-    'featured': function featured(params) {
-      if (!app.isLoggedIn()) {
-        router.navigate("/");
-        return false;
-      }
-      _featured.load();
-      setTitle("Featured");
-      setView("featured");
-    },
-    'landmarks/:id': function landmarksId(params) {
-      if (!app.isLoggedIn()) {
-        router.navigate("/");
-        return false;
-      }
-      landmark.view(params.id);
-      setView("landmark");
-    },
-    '*': function _(params) {
-      if (app.isLoggedIn()) {
-        router.navigate("/map");
-        return false;
-      }
-      setTitle("Home");
-      setView("landing");
-    }
-  });
-
   jQuery(".btn-sign-up").click(function (e) {
     modalSignUp.part("form");
     modalSignUp.show();
@@ -10980,7 +11170,7 @@ jQuery(document).ready(function (e) {
   });
 
   jQuery(".link-me-edit").click(function (e) {
-    modalEditProfile.show();
+    modalEditProfile.open();
     e.preventDefault();
   });
 
@@ -10992,6 +11182,8 @@ jQuery(document).ready(function (e) {
   });
 });
 
+jQuery(window).on("load", function () {});
+
 /***/ }),
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -11000,7 +11192,7 @@ jQuery(document).ready(function (e) {
 
 
 var config = {
-  domain: "http://joan-tahanan.herokuapp.com"
+  domain: "//joan-tahanan.herokuapp.com"
 };
 
 config.api = config.domain + "/api";
@@ -11018,8 +11210,8 @@ var colors = __webpack_require__(15);
 var api = __webpack_require__(0);
 var GoogleMapsLoader = __webpack_require__(16);
 var router = __webpack_require__(5);
-var app = __webpack_require__(2);
-var jQuery = __webpack_require__(1);
+var app = __webpack_require__(1);
+var jQuery = __webpack_require__(2);
 
 var center = {
   lat: 26.0512533,
@@ -11045,21 +11237,23 @@ app.on("map-data", function (data) {
   GoogleMapsLoader.load(function (google) {
     console.log("Google Maps loaded!");
 
+    var MarkerWithLabel = __webpack_require__(18)(google);
+
     var geocoder = new google.maps.Geocoder();
     var markerSize = new google.maps.Size(35, 50);
     var allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(center.lat - range.lat, center.lng - range.lng), new google.maps.LatLng(center.lat + range.lat, center.lng + range.lng));
     var map = new google.maps.Map(document.querySelector("#google-map"), {
       center: allowedBounds.getCenter(),
       zoom: 11,
-      // minZoom: 10,
-      // disableDefaultUI: true,
+      minZoom: 10,
+      disableDefaultUI: true,
       zoomControl: true,
       mapTypeControl: false,
       scaleControl: true,
-      streetViewControl: true,
+      streetViewControl: false,
       rotateControl: true,
       fullscreenControl: false,
-      styles: __webpack_require__(18)
+      styles: __webpack_require__(19)
     });
 
     // map.fitBounds(allowedBounds);
@@ -11075,13 +11269,19 @@ app.on("map-data", function (data) {
     });
 
     data.landmarks.forEach(function (landmark) {
-      var marker = new google.maps.Marker({
+
+      var marker = new MarkerWithLabel({
         map: map,
         icon: {
-          url: 'img/marker-dark.png',
+          url: 'img/marker-light.png',
           scaledSize: markerSize
         },
-        position: landmark
+        position: landmark,
+        title: landmark.name,
+        labelAnchor: new google.maps.Point(-30, 40),
+        labelContent: landmark.name,
+        labelClass: "map-marker-label",
+        labelInBackground: true
       });
 
       markers.push(marker);
@@ -11093,11 +11293,11 @@ app.on("map-data", function (data) {
       });
 
       marker.addListener('mouseover', function (e) {
-        marker.setIcon({ url: 'img/marker-light.png', scaledSize: markerSize });
+        marker.setIcon({ url: 'img/marker-dark.png', scaledSize: markerSize });
       });
 
       marker.addListener('mouseout', function (e) {
-        marker.setIcon({ url: 'img/marker-dark.png', scaledSize: markerSize });
+        marker.setIcon({ url: 'img/marker-light.png', scaledSize: markerSize });
       });
     });
 
@@ -11414,6 +11614,138 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root
 "use strict";
 
 
+/*!
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+
+
+https://cdn.sobekrepository.org/includes/gmaps-markerwithlabel/1.9.1/gmaps-markerwithlabel-1.9.1.min.js
+
+ */
+
+module.exports = function (google) {
+
+  function inherits(n, t) {
+    function i() {}i.prototype = t.prototype;n.superClass_ = t.prototype;n.prototype = new i();n.prototype.constructor = n;
+  }function MarkerLabel_(n, t) {
+    this.marker_ = n;this.handCursorURL_ = n.handCursorURL;this.labelDiv_ = document.createElement("div");this.labelDiv_.style.cssText = "position: absolute; overflow: hidden;";this.eventDiv_ = document.createElement("div");this.eventDiv_.style.cssText = this.labelDiv_.style.cssText;this.eventDiv_.setAttribute("onselectstart", "return false;");this.eventDiv_.setAttribute("ondragstart", "return false;");this.crossDiv_ = MarkerLabel_.getSharedCross(t);
+  }function MarkerWithLabel(n) {
+    n = n || {};n.labelContent = n.labelContent || "";n.labelAnchor = n.labelAnchor || new google.maps.Point(0, 0);n.labelClass = n.labelClass || "markerLabels";n.labelStyle = n.labelStyle || {};n.labelInBackground = n.labelInBackground || !1;typeof n.labelVisible == "undefined" && (n.labelVisible = !0);typeof n.raiseOnDrag == "undefined" && (n.raiseOnDrag = !0);typeof n.clickable == "undefined" && (n.clickable = !0);typeof n.draggable == "undefined" && (n.draggable = !1);typeof n.optimized == "undefined" && (n.optimized = !1);n.crossImage = n.crossImage || "http" + (document.location.protocol === "https:" ? "s" : "") + "://maps.gstatic.com/intl/en_us/mapfiles/drag_cross_67_16.png";n.handCursor = n.handCursor || "http" + (document.location.protocol === "https:" ? "s" : "") + "://maps.gstatic.com/intl/en_us/mapfiles/closedhand_8_8.cur";n.optimized = !1;this.label = new MarkerLabel_(this, n.crossImage, n.handCursor);google.maps.Marker.apply(this, arguments);
+  }inherits(MarkerLabel_, google.maps.OverlayView);MarkerLabel_.getSharedCross = function (n) {
+    var t;return typeof MarkerLabel_.getSharedCross.crossDiv == "undefined" && (t = document.createElement("img"), t.style.cssText = "position: absolute; z-index: 1000002; display: none;", t.style.marginLeft = "-8px", t.style.marginTop = "-9px", t.src = n, MarkerLabel_.getSharedCross.crossDiv = t), MarkerLabel_.getSharedCross.crossDiv;
+  };MarkerLabel_.prototype.onAdd = function () {
+    var n = this,
+        r = !1,
+        t = !1,
+        o,
+        s,
+        h,
+        f,
+        i,
+        c,
+        l,
+        u = 20,
+        a = "url(" + this.handCursorURL_ + ")",
+        e = function e(n) {
+      n.preventDefault && n.preventDefault();n.cancelBubble = !0;n.stopPropagation && n.stopPropagation();
+    },
+        v = function v() {
+      n.marker_.setAnimation(null);
+    };this.getPanes().overlayImage.appendChild(this.labelDiv_);this.getPanes().overlayMouseTarget.appendChild(this.eventDiv_);typeof MarkerLabel_.getSharedCross.processed == "undefined" && (this.getPanes().overlayImage.appendChild(this.crossDiv_), MarkerLabel_.getSharedCross.processed = !0);this.listeners_ = [google.maps.event.addDomListener(this.eventDiv_, "mouseover", function (t) {
+      (n.marker_.getDraggable() || n.marker_.getClickable()) && (this.style.cursor = "pointer", google.maps.event.trigger(n.marker_, "mouseover", t));
+    }), google.maps.event.addDomListener(this.eventDiv_, "mouseout", function (i) {
+      (n.marker_.getDraggable() || n.marker_.getClickable()) && !t && (this.style.cursor = n.marker_.getCursor(), google.maps.event.trigger(n.marker_, "mouseout", i));
+    }), google.maps.event.addDomListener(this.eventDiv_, "mousedown", function (i) {
+      t = !1;n.marker_.getDraggable() && (r = !0, this.style.cursor = a);(n.marker_.getDraggable() || n.marker_.getClickable()) && (google.maps.event.trigger(n.marker_, "mousedown", i), e(i));
+    }), google.maps.event.addDomListener(document, "mouseup", function (e) {
+      var s;if (r && (r = !1, n.eventDiv_.style.cursor = "pointer", google.maps.event.trigger(n.marker_, "mouseup", e)), t) {
+        if (i) {
+          s = n.getProjection().fromLatLngToDivPixel(n.marker_.getPosition());s.y += u;n.marker_.setPosition(n.getProjection().fromDivPixelToLatLng(s));try {
+            n.marker_.setAnimation(google.maps.Animation.BOUNCE);setTimeout(v, 1406);
+          } catch (h) {}
+        }n.crossDiv_.style.display = "none";n.marker_.setZIndex(o);f = !0;t = !1;e.latLng = n.marker_.getPosition();google.maps.event.trigger(n.marker_, "dragend", e);
+      }
+    }), google.maps.event.addListener(n.marker_.getMap(), "mousemove", function (f) {
+      var e;r && (t ? (f.latLng = new google.maps.LatLng(f.latLng.lat() - s, f.latLng.lng() - h), e = n.getProjection().fromLatLngToDivPixel(f.latLng), i && (n.crossDiv_.style.left = e.x + "px", n.crossDiv_.style.top = e.y + "px", n.crossDiv_.style.display = "", e.y -= u), n.marker_.setPosition(n.getProjection().fromDivPixelToLatLng(e)), i && (n.eventDiv_.style.top = e.y + u + "px"), google.maps.event.trigger(n.marker_, "drag", f)) : (s = f.latLng.lat() - n.marker_.getPosition().lat(), h = f.latLng.lng() - n.marker_.getPosition().lng(), o = n.marker_.getZIndex(), c = n.marker_.getPosition(), l = n.marker_.getMap().getCenter(), i = n.marker_.get("raiseOnDrag"), t = !0, n.marker_.setZIndex(1e6), f.latLng = n.marker_.getPosition(), google.maps.event.trigger(n.marker_, "dragstart", f)));
+    }), google.maps.event.addDomListener(document, "keydown", function (r) {
+      t && r.keyCode === 27 && (i = !1, n.marker_.setPosition(c), n.marker_.getMap().setCenter(l), google.maps.event.trigger(document, "mouseup", r));
+    }), google.maps.event.addDomListener(this.eventDiv_, "click", function (t) {
+      (n.marker_.getDraggable() || n.marker_.getClickable()) && (f ? f = !1 : (google.maps.event.trigger(n.marker_, "click", t), e(t)));
+    }), google.maps.event.addDomListener(this.eventDiv_, "dblclick", function (t) {
+      (n.marker_.getDraggable() || n.marker_.getClickable()) && (google.maps.event.trigger(n.marker_, "dblclick", t), e(t));
+    }), google.maps.event.addListener(this.marker_, "dragstart", function () {
+      t || (i = this.get("raiseOnDrag"));
+    }), google.maps.event.addListener(this.marker_, "drag", function () {
+      t || i && (n.setPosition(u), n.labelDiv_.style.zIndex = 1e6 + (this.get("labelInBackground") ? -1 : 1));
+    }), google.maps.event.addListener(this.marker_, "dragend", function () {
+      t || i && n.setPosition(0);
+    }), google.maps.event.addListener(this.marker_, "position_changed", function () {
+      n.setPosition();
+    }), google.maps.event.addListener(this.marker_, "zindex_changed", function () {
+      n.setZIndex();
+    }), google.maps.event.addListener(this.marker_, "visible_changed", function () {
+      n.setVisible();
+    }), google.maps.event.addListener(this.marker_, "labelvisible_changed", function () {
+      n.setVisible();
+    }), google.maps.event.addListener(this.marker_, "title_changed", function () {
+      n.setTitle();
+    }), google.maps.event.addListener(this.marker_, "labelcontent_changed", function () {
+      n.setContent();
+    }), google.maps.event.addListener(this.marker_, "labelanchor_changed", function () {
+      n.setAnchor();
+    }), google.maps.event.addListener(this.marker_, "labelclass_changed", function () {
+      n.setStyles();
+    }), google.maps.event.addListener(this.marker_, "labelstyle_changed", function () {
+      n.setStyles();
+    })];
+  };MarkerLabel_.prototype.onRemove = function () {
+    var n;for (this.labelDiv_.parentNode.removeChild(this.labelDiv_), this.eventDiv_.parentNode.removeChild(this.eventDiv_), n = 0; n < this.listeners_.length; n++) {
+      google.maps.event.removeListener(this.listeners_[n]);
+    }
+  };MarkerLabel_.prototype.draw = function () {
+    this.setContent();this.setTitle();this.setStyles();
+  };MarkerLabel_.prototype.setContent = function () {
+    var n = this.marker_.get("labelContent");typeof n.nodeType == "undefined" ? (this.labelDiv_.innerHTML = n, this.eventDiv_.innerHTML = this.labelDiv_.innerHTML) : (this.labelDiv_.innerHTML = "", this.labelDiv_.appendChild(n), n = n.cloneNode(!0), this.eventDiv_.appendChild(n));
+  };MarkerLabel_.prototype.setTitle = function () {
+    this.eventDiv_.title = this.marker_.getTitle() || "";
+  };MarkerLabel_.prototype.setStyles = function () {
+    var n, t;this.labelDiv_.className = this.marker_.get("labelClass");this.eventDiv_.className = this.labelDiv_.className;this.labelDiv_.style.cssText = "";this.eventDiv_.style.cssText = "";t = this.marker_.get("labelStyle");for (n in t) {
+      t.hasOwnProperty(n) && (this.labelDiv_.style[n] = t[n], this.eventDiv_.style[n] = t[n]);
+    }this.setMandatoryStyles();
+  };MarkerLabel_.prototype.setMandatoryStyles = function () {
+    this.labelDiv_.style.position = "absolute";this.labelDiv_.style.overflow = "hidden";typeof this.labelDiv_.style.opacity != "undefined" && this.labelDiv_.style.opacity !== "" && (this.labelDiv_.style.MsFilter = '"progid:DXImageTransform.Microsoft.Alpha(opacity=' + this.labelDiv_.style.opacity * 100 + ')"', this.labelDiv_.style.filter = "alpha(opacity=" + this.labelDiv_.style.opacity * 100 + ")");this.eventDiv_.style.position = this.labelDiv_.style.position;this.eventDiv_.style.overflow = this.labelDiv_.style.overflow;this.eventDiv_.style.opacity = .01;this.eventDiv_.style.MsFilter = '"progid:DXImageTransform.Microsoft.Alpha(opacity=1)"';this.eventDiv_.style.filter = "alpha(opacity=1)";this.setAnchor();this.setPosition();this.setVisible();
+  };MarkerLabel_.prototype.setAnchor = function () {
+    var n = this.marker_.get("labelAnchor");this.labelDiv_.style.marginLeft = -n.x + "px";this.labelDiv_.style.marginTop = -n.y + "px";this.eventDiv_.style.marginLeft = -n.x + "px";this.eventDiv_.style.marginTop = -n.y + "px";
+  };MarkerLabel_.prototype.setPosition = function (n) {
+    var t = this.getProjection().fromLatLngToDivPixel(this.marker_.getPosition());typeof n == "undefined" && (n = 0);this.labelDiv_.style.left = Math.round(t.x) + "px";this.labelDiv_.style.top = Math.round(t.y - n) + "px";this.eventDiv_.style.left = this.labelDiv_.style.left;this.eventDiv_.style.top = this.labelDiv_.style.top;this.setZIndex();
+  };MarkerLabel_.prototype.setZIndex = function () {
+    var n = this.marker_.get("labelInBackground") ? -1 : 1;typeof this.marker_.getZIndex() == "undefined" ? (this.labelDiv_.style.zIndex = parseInt(this.labelDiv_.style.top, 10) + n, this.eventDiv_.style.zIndex = this.labelDiv_.style.zIndex) : (this.labelDiv_.style.zIndex = this.marker_.getZIndex() + n, this.eventDiv_.style.zIndex = this.labelDiv_.style.zIndex);
+  };MarkerLabel_.prototype.setVisible = function () {
+    this.labelDiv_.style.display = this.marker_.get("labelVisible") ? this.marker_.getVisible() ? "block" : "none" : "none";this.eventDiv_.style.display = this.labelDiv_.style.display;
+  };inherits(MarkerWithLabel, google.maps.Marker);MarkerWithLabel.prototype.setMap = function (n) {
+    google.maps.Marker.prototype.setMap.apply(this, arguments);this.label.setMap(n);
+  };
+
+  return MarkerWithLabel;
+};
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 module.exports = [{
   "elementType": "labels.text",
   "stylers": [{
@@ -11517,19 +11849,20 @@ module.exports = [{
 }];
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = function () {
+module.exports = function (e) {
   alert("Something went wrong! Reloading...");
-  window.location.reload();
+  console.log(e);
+  // window.location.reload();
 };
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11540,19 +11873,25 @@ var modals = [__webpack_require__(8), __webpack_require__(9), __webpack_require_
 module.exports = modals;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var jQuery = __webpack_require__(1);
+var jQuery = __webpack_require__(2);
 
 module.exports = function setView(id) {
   jQuery('.view-wrapper').each(function (index, element) {
     var $element = jQuery(element);
+    var cid = 'view-' + id;
+    console.log("Setting view to " + cid);
 
-    if (element.id == 'view-' + id) {
+    var $body = jQuery(document.body);
+    $body.attr("class", $body.attr("class").replace(/(view-[^ ]*)/gmi, ""));
+    $body.addClass(cid.split("-").splice(0, 2).join("-"));
+
+    if (element.id == cid) {
       $element.removeClass("hidden");
       $element.addClass("visible");
     } else {
@@ -11563,14 +11902,14 @@ module.exports = function setView(id) {
 };
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var app = __webpack_require__(2);
-var jQuery = __webpack_require__(1);
+var app = __webpack_require__(1);
+var jQuery = __webpack_require__(2);
 var router = __webpack_require__(5);
 var $video = jQuery("video#video-backdrop");
 var setTitle = __webpack_require__(11);
@@ -11651,25 +11990,29 @@ function loadMemories() {
       var $memory = memoryTemplate(memory);
       $memories.append($memory);
 
-      $memory.click(function (e) {
+      $memory.find(".image-wrapper").click(function (e) {
         modalViewMemory.load(memory.mem_id);
         modalViewMemory.show();
+        modalViewMemory.onclose = function () {
+          loadMemories();
+        };
       });
     });
   }).catch(function (e) {
     alert("Something went wrong! Reloading...");
-    window.location.reload();
+    console.log(e);
+    // window.location.reload();
   });
 }
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var jQuery = __webpack_require__(1);
+var jQuery = __webpack_require__(2);
 var api = __webpack_require__(0);
 var memoryTemplate = __webpack_require__(7);
 var modalViewMemory = __webpack_require__(4);
@@ -11688,26 +12031,29 @@ function load() {
       var $memory = memoryTemplate(memory);
       $memories.append($memory);
 
-      $memory.click(function (e) {
+      $memory.find(".image-wrapper").click(function (e) {
         modalViewMemory.load(memory.mem_id);
         modalViewMemory.show();
+        modalViewMemory.onclose = function () {
+          load();
+        };
       });
     });
   }).catch(console.log);
 }
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var jQuery = __webpack_require__(1);
+var jQuery = __webpack_require__(2);
 var api = __webpack_require__(0);
 var memoryTemplate = __webpack_require__(7);
 var modalViewMemory = __webpack_require__(4);
-var app = __webpack_require__(2);
+var app = __webpack_require__(1);
 
 var $memories = jQuery("#view-me-memories .memories-wrapper");
 
@@ -11723,9 +12069,12 @@ function load() {
       var $memory = memoryTemplate(memory);
       $memories.append($memory);
 
-      $memory.click(function (e) {
+      $memory.find(".image-wrapper").click(function (e) {
         modalViewMemory.load(memory.mem_id);
         modalViewMemory.show();
+        modalViewMemory.onclose = function () {
+          loadMemories();
+        };
       });
     });
   }).catch(console.log);

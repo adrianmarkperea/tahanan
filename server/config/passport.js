@@ -88,6 +88,11 @@ module.exports = (passport) => {
         }
         var encryptedPassword = verifier.saltHashPassword(password);
         var hasImage = req.files ? true : false;
+        if (hasImage) {
+          if (req.files.profileImage === undefined || req.files.profileImage === null) {
+            hasImage = false;
+          }
+        }
         var profile_pic_url;
 
         if (hasImage) {

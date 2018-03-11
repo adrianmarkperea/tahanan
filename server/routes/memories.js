@@ -11,4 +11,6 @@ router.post('/:memoryId/likes', memoriesController.like);    // TODO: Document
 router.get('/:memoryId', memoriesController.retrieveMemory); // TODO: Document
 router.post('/:memoryId/comments', commentsController.addMemoryComment);
 
+router.delete('/:memoryId', memoriesController.delete);
+
 module.exports = router;

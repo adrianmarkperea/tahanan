@@ -2,6 +2,7 @@ const Memory = require('../models').Memory;
 const Landmark = require('../models').Landmark;
 const User = require('../models').User;
 const Like = require('../models').Like;
+const Comment = require('../models').Comment;
 const path   = require('path');
 const imageFactory = require('../../libs/image-factory');
 const sequelize = require('sequelize');
@@ -491,5 +492,38 @@ module.exports = {
         returnJson['comment_count'] = returnJson['comments'].length;
         res.status(200).json(returnJson);
       })
+  },
+  delete(req, res) {
+    var returnJson = {};
+    console.log(`Destroying memory where id is: ${req.params.memoryId}`)
+    return Like
+      .destroy({
+        where: { memoryId: req.params.memoryId }
+      })
+      .then(() => {
+        return Comment
+          .destroy({
+            where: { memoryId: req.params.memoryId }
+          })
+      })
+      .then(() => {
+        return Memory
+          .destroy({
+            where: { id: req.params.memoryId }
+          })
+      })
+      .then(num_rows => {
+        if (num_rows === 1) {
+          returnJson['message'] = 'Memory Destroyed';
+          res.status(200).json(returnJson);
+        } else if (num_rows === 0) {
+          returnJson['message'] = 'Memory cannot be found';
+          res.status(200).json(returnJson);
+        }
+      })
+      .catch(err => {
+        console.log(`Error when destroying memory (${req.params.memoryId})`);
+        res.status(400).send(err);
+      });
   }
 }

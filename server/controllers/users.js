@@ -33,14 +33,18 @@ module.exports = {
         if (!user) {
           // TODO: ERROR!!!
         }
-        returnJson['data'] = extractUserData(user);
+        returnJson['data'] = {};
+        returnJson['data']['userId']    = user['id'];
+        returnJson['data']['name']      = user['first_name'] + ' ' + user['last_name'];
+        returnJson['data']['email']     = user['email'];
+        returnJson['data']['bio']       = user['bio'];
+        returnJson['data']['image_url'] = user['profile_pic_url'];
         res.status(200).json(returnJson);
       })
   },
   update(req, res) {
     var returnJson = {};
     returnJson['errors'] = [];
-    var bio = req.body.bio;
     var profile_pic_image = req.files ? req.files.profileImage : null;
     if (req.files.profileImage === undefined || req.files.profileImage === null) {
       profile_pic_image = null;
@@ -57,7 +61,8 @@ module.exports = {
         }
 
         var first_name = req.body.first_name || user[1][0]['first_name']
-        var last_name = req.body.last_name || user[1][0]['first_name']
+        var last_name = req.body.last_name || user[1][0]['last_name']
+        var bio = req.body.bio || user[1][0]['bio'];
 
         if (profile_pic_image) {
            return imageFactory.storeImage(profile_pic_image)
