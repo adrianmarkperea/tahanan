@@ -64,7 +64,7 @@ module.exports = (app, passport) => {
     var returnJson = {};
     console.log(req)
     if (req.isAuthenticated()) {
-      // returnJson = extractUserData(req['user']);
+      returnJson = extractUserData(req['user']);
       returnJson.errors = [];
       returnJson.loggedIn = true;
       return res.status(200).json(returnJson);
