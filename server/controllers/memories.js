@@ -132,7 +132,7 @@ module.exports = {
           },
           {
             model: User,
-            attributes: ['id', 'first_name', 'last_name'],
+            attributes: ['id', 'first_name', 'last_name', 'profile_pic_url'],
           }
         ],
         where: { userId: req.params.userId },
@@ -160,6 +160,7 @@ module.exports = {
             newMemory['mem_id']    = memory['id'];
             newMemory['user_id']   = memory['User']['id'];
             newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+            newMemory['profile_pic_url'] = memory['User']['profile_pic_url'];
             newMemory['land_id']   = memory['Landmark']['id'];
             newMemory['land_name'] = memory['Landmark']['name'];
             newMemory['image']     = memory['image_url'];
@@ -179,6 +180,7 @@ module.exports = {
             newMemory['likes'] = likers[i].length;
             returnJson['data'].push(newMemory);
           }
+          // res.status(200).json(memories);
           res.status(200).json(returnJson);
         })
       })
@@ -198,7 +200,7 @@ module.exports = {
           },
           {
             model: User,
-            attributes: ['id', 'first_name', 'last_name'],
+            attributes: ['id', 'first_name', 'last_name', 'profile_pic_url'],
           },
         ],
         order: [
@@ -236,6 +238,7 @@ module.exports = {
                 newMemory['mem_id']    = memory['id'];
                 newMemory['user_id']   = memory['User']['id'];
                 newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+                newMemory['profile_pic_url'] = memory['User']['profile_pic_url'];
                 newMemory['land_id']   = memory['Landmark']['id'];
                 newMemory['land_name'] = memory['Landmark']['name'];
                 newMemory['image']     = memory['image_url'];
@@ -277,7 +280,7 @@ module.exports = {
           },
           {
             model: User,
-            attributes: ['id', 'first_name', 'last_name'],
+            attributes: ['id', 'first_name', 'last_name', 'profile_pic_url'],
           },
         ],
         order: [
@@ -316,6 +319,7 @@ module.exports = {
                 newMemory['mem_id']    = memory['id'];
                 newMemory['user_id']   = memory['User']['id'];
                 newMemory['user_name'] = memory['User']['first_name'] + ' ' +  memory['User']['last_name'];
+                newMemory['profile_pic_url'] = memory['User']['profile_pic_url'];
                 newMemory['land_id']   = memory['Landmark']['id'];
                 newMemory['land_name'] = memory['Landmark']['name'];
                 newMemory['image']     = memory['image_url'];
@@ -443,7 +447,7 @@ module.exports = {
           },
           {
             model: User,
-            attributes: ['id', 'first_name', 'last_name']
+            attributes: ['id', 'first_name', 'last_name', 'profile_pic_url']
           }
         ]
       })
@@ -455,6 +459,7 @@ module.exports = {
         returnJson['mem_id']    = selectedMemory['id'];
         returnJson['user_id']   = selectedMemory['User']['id'];
         returnJson['user_name'] = selectedMemory['User']['first_name'] + ' ' +  selectedMemory['User']['last_name'];
+        returnJson['profile_pic_url'] = selectedMemory['User']['profile_pic_url'];
         returnJson['land_id']   = selectedMemory['Landmark']['id'];
         returnJson['land_name'] = selectedMemory['Landmark']['name'];
         returnJson['image']     = selectedMemory['image_url'];
@@ -485,6 +490,7 @@ module.exports = {
         commenters.forEach(commenter => {
           var newComment = {};
           newComment['user_name'] = commenter['first_name'] + ' ' + commenter['last_name']
+          newComment['profile_pic_url'] = commenter['profile_pic_url'];
           newComment['timestamp'] = commenter['Comment']['createdAt'];
           newComment['message'] = commenter['Comment']['message'];
           returnJson['comments'].push(newComment)

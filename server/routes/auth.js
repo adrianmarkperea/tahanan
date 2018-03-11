@@ -3,11 +3,13 @@ const router = express.Router();
 
 function extractUserData(user) {
   var returnJson = {};
-  returnJson.userId     = user['id'];
-  returnJson.name = user['first_name'] + ' ' + user['last_name'];
-  returnJson.email = user['email'];
-  returnJson.bio = user['bio'];
-  returnJson.image_url = user['profile_pic_url'];
+  returnJson['data'] = {};
+  returnJson['data']['userId']     = user['id'];
+  returnJson['data']['first_name'] = user['first_name'];
+  returnJson['data']['last_name']  = user['last_name'];
+  returnJson['data']['email']      = user['email'];
+  returnJson['data']['bio']        = user['bio'];
+  returnJson['data']['image_url']  = user['profile_pic_url'];
   return returnJson;
 }
 
@@ -32,15 +34,6 @@ module.exports = (app, passport) => {
     })(req, res, next);
   });
 
-  router.get('/success_login', (req, res) => {
-    if (req.isAuthenticated()) {
-      returnJson = extractUserData(req['user']);
-      returnJson.errors   = [];
-      returnJson.message  = 'Log In Successful';
-      returnJson.loggedIn = true;
-      return res.status(200).json(returnJson);
-    }
-  });
 
   router.post('/signup', (req, res, next) => {
     passport.authenticate('signup', (err, user, info) => {
@@ -53,7 +46,7 @@ module.exports = (app, passport) => {
       }
       req.login(user, (err) => {
         if (err) { return next(err); }
-        returnJson = extractUserData(user);
+        returnJson = extractUserData(user['dataValues']);
         returnJson.errors = [];
         returnJson.message = 'Sign Up Successful. User is logged in';
         returnJson.loggedIn = true;
@@ -67,21 +60,11 @@ module.exports = (app, passport) => {
     return res.status(200).json('You are logged out');
   })
 
-    router.get('/success_signup', (req, res) => {
-    if (req.isAuthenticated()) {
-      var returnJson = extractUserData(req['user']);
-      returnJson.errors = [];
-      returnJson.message = 'Sign Up Successful. User is logged in';
-      returnJson.loggedIn = true;
-      return res.status(200).json(returnJson);
-    }
-  });
-
   router.get('/me', (req, res) => {
     var returnJson = {};
     console.log(req)
     if (req.isAuthenticated()) {
-      returnJson = extractUserData(req['user']);
+      // returnJson = extractUserData(req['user']);
       returnJson.errors = [];
       returnJson.loggedIn = true;
       return res.status(200).json(returnJson);

@@ -35,7 +35,8 @@ module.exports = {
         }
         returnJson['data'] = {};
         returnJson['data']['userId']    = user['id'];
-        returnJson['data']['name']      = user['first_name'] + ' ' + user['last_name'];
+        returnJson['data']['first_name'] = user['first_name'];
+        returnJson['data']['last_name'] = user['last_name'];
         returnJson['data']['email']     = user['email'];
         returnJson['data']['bio']       = user['bio'];
         returnJson['data']['image_url'] = user['profile_pic_url'];
@@ -44,6 +45,7 @@ module.exports = {
   },
   update(req, res) {
     var returnJson = {};
+    returnJson['data'] = {};
     returnJson['errors'] = [];
     var profile_pic_image = req.files ? req.files.profileImage : null;
     if (req.files.profileImage === undefined || req.files.profileImage === null) {
@@ -84,11 +86,12 @@ module.exports = {
             })
             .then(user => {
               var retUser = user[1][0];
-              returnJson['userId']    = retUser['id'];
-              returnJson['name']      = retUser['first_name'] + ' ' + retUser['last_name'];
-              returnJson['email']     = retUser['email'];
-              returnJson['bio']       = retUser['bio'];
-              returnJson['image_url'] = retUser['profile_pic_url'];
+              returnJson['data']['userId']    = user['id'];
+              returnJson['data']['first_name'] = user['first_name'];
+              returnJson['data']['last_name'] = user['last_name'];
+              returnJson['data']['email']     = user['email'];
+              returnJson['data']['bio']       = user['bio'];
+              returnJson['data']['image_url'] = user['profile_pic_url'];
               res.status(200).json(returnJson);
             })
         } else {
@@ -106,11 +109,12 @@ module.exports = {
             })
             .then(user => {
               var retUser = user[1][0];
-              returnJson['userId']    = retUser['id'];
-              returnJson['name']      = retUser['first_name'] + ' ' + retUser['last_name'];
-              returnJson['email']     = retUser['email'];
-              returnJson['bio']       = retUser['bio'];
-              returnJson['image_url'] = retUser['profile_pic_url'];
+              returnJson['data']['userId']    = user['id'];
+              returnJson['data']['first_name'] = user['first_name'];
+              returnJson['data']['last_name'] = user['last_name'];
+              returnJson['data']['email']     = user['email'];
+              returnJson['data']['bio']       = user['bio'];
+              returnJson['data']['image_url'] = user['profile_pic_url'];
               res.status(200).json(returnJson);
             })
         }
