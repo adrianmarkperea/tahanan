@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
     image_url: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    name_url: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   }, {});
   Landmark.associate = function(models) {

@@ -63,6 +63,7 @@ module.exports = {
           newLandmark['lat']      = landmark['lat'];
           newLandmark['lng']      = landmark['lng'];
           newLandmark['backdrop'] = landmark['image_url'];
+          newLandmark['calligraphy'] = landmark['name_url'];
           newLandmark['memory_count'] = landmark['Memories'].length;
           returnJson['landmarks'].push(newLandmark);
         });
