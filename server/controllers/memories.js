@@ -189,6 +189,14 @@ module.exports = {
               }
             });
             newMemory['likes'] = likers[i].length;
+            newMemory['likers'] = [];
+            likers[i].forEach(liker => {
+              var newLiker = {};
+              newLiker['id'] = liker['dataValues']['id'];
+              newLiker['first_name'] = liker['dataValues']['first_name'];
+              newLiker['last_name'] = liker['dataValues']['last_name'];
+              newMemory['likers'].push(newLiker)
+            })
             returnJson['data'].push(newMemory);
           }
           // res.status(200).json(memories);
@@ -269,6 +277,14 @@ module.exports = {
                     newMemory['liked'] = true;
                   }
                 });
+                newMemory['likers'] = [];
+                likers[i].forEach(liker => {
+                  var newLiker = {};
+                  newLiker['id'] = liker['dataValues']['id'];
+                  newLiker['first_name'] = liker['dataValues']['first_name'];
+                  newLiker['last_name'] = liker['dataValues']['last_name'];
+                  newMemory['likers'].push(newLiker)
+                })
                 returnJson['data'].push(newMemory);
               }
               res.status(200).json(returnJson);
@@ -351,6 +367,14 @@ module.exports = {
                     newMemory['liked'] = true;
                   }
                 });
+                newMemory['likers'] = [];
+                likers[i].forEach(liker => {
+                  var newLiker = {};
+                  newLiker['id'] = liker['dataValues']['id'];
+                  newLiker['first_name'] = liker['dataValues']['first_name'];
+                  newLiker['last_name'] = liker['dataValues']['last_name'];
+                  newMemory['likers'].push(newLiker)
+                })
                 allMemories.push(newMemory);
               }
               // Sort by most likes to least likes
@@ -494,6 +518,14 @@ module.exports = {
           if (id === req['user']['id']) {
             returnJson['liked'] = true;
           }
+        })
+        returnJson['likers'] = [];
+        users.forEach(liker => {
+          var newLiker = {};
+          newLiker['id'] = liker['dataValues']['id'];
+          newLiker['first_name'] = liker['dataValues']['first_name'];
+          newLiker['last_name'] = liker['dataValues']['last_name'];
+          returnJson['likers'].push(newLiker)
         })
         // console.log(users);
         return selectedMemory
