@@ -108,5 +108,28 @@ module.exports = {
         console.log(`Error: ${err}`);
         res.status(400).json(err);
       })
+  },
+  delete(req, res) {
+    var returnJson = {};
+    returnJson['errors'] = [];
+    return Comment
+      .destroy({
+        where: {
+          id: req.params.commentId
+        }
+      })
+      .then(numRows => {
+        if (numRows === 1) {
+          returnJson['message'] = 'Comment deleted';
+          return res.status(200).json(returnJson);
+        } else if (numRows === 0) {
+          returnJson['message'] = 'Comment cannnot be found';
+          return res.status(200).json(returnJson);
+        }
+      })
+      .catch(err => {
+        console.log(`Err: ${err}`);
+        return res.status(400).send(err);
+      })
   }
 }
