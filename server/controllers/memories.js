@@ -378,7 +378,13 @@ module.exports = {
                 allMemories.push(newMemory);
               }
               // Sort by most likes to least likes
-              allMemories.sort((a, b) => a.likes > b.likes ? -1 : a.likes < b.likes ? 1 : a.date > b.date ? -1 : a.date < b.date ? 1 : 0);
+              var sortby = req.query.sortby;
+              if (sortby !== undefined && sortby === 'likes') {
+                console.log('Sorting by likes');
+                allMemories.sort((a, b) => a.likes > b.likes ? -1 : a.likes < b.likes ? 1 : a.date > b.date ? -1 : a.date < b.date ? 1 : 0);
+              } else {
+                console.log('Sorted by time of creation');
+              }
               // Limit to the number of featured memories (default: 20)
               returnJson['data'] = allMemories.slice(0, limit);
               res.status(200).json(returnJson);
