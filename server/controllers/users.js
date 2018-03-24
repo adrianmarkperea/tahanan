@@ -108,11 +108,12 @@ module.exports = {
                 fields: ['bio', 'first_name', 'last_name'],
                 where: { id: user['id'] },
                 returning: true
-            })
+              }
+            )
             .then(user => {
               var retUser = user[1][0];
               returnJson['data']['userId']    = user['id'];
-              returnJson['data']['user_name'] = user['first_name'] + ' ' + user['last_name'];        
+              returnJson['data']['user_name'] = user['first_name'] + ' ' + user['last_name'];
               returnJson['data']['first_name'] = user['first_name'];
               returnJson['data']['last_name'] = user['last_name'];
               returnJson['data']['email']     = user['email'];
@@ -123,5 +124,52 @@ module.exports = {
         }
       })
       .catch(err => res.status(400).send(err));
+  },
+  changePassword(req, res) {
+    console.log('Changing user password');
+    var returnJson = {};
+    returnJson['errors'] = [];
+    returnJson['data'] = {};
+
+    User
+      .findById(req.params.userId)
+      .then(user => {
+        if (!user) {
+          returnJson['errors'].push('user not found');
+          console.log('No user');
+          return res.status(404).json(returnJson);
+        }
+        console.log(req.body.password);
+        var encryptedPassword = verifier.saltHashPassword(req.body.password);
+        return User
+          .update(
+            {
+              password: encryptedPassword.passwordHash,
+              salt: encryptedPassword.salt,
+            },
+            {
+              fields: ['password', 'salt'],
+              where: { id: req.params.userId },
+              returning: true
+            }
+          )
+      })
+      .then(user => {
+        var retUser = user[1][0]['dataValues'];
+
+        returnJson['data']['userId']     = retUser['id'];
+        returnJson['data']['user_name']  = retUser['first_name'] + ' ' + retUser['last_name'];
+        returnJson['data']['first_name'] = retUser['first_name'];
+        returnJson['data']['last_name']  = retUser['last_name'];
+        returnJson['data']['email']      = retUser['email'];
+        returnJson['data']['bio']        = retUser['bio'];
+        returnJson['data']['image_url']  = retUser['profile_pic_url'];
+
+        res.status(200).json(returnJson);
+      })
+      .catch(err => {
+        console.log(err);
+        return res.status(400).send(err);
+      });
   }
 }

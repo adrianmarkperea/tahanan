@@ -6,6 +6,7 @@ const memoriesController = require('../controllers').memories;
 router.get('/:userId/memories', memoriesController.getUserMemories);
 router.get('/:userId', usersController.retrieve);
 router.post('/:userId', usersController.update);
+router.post('/:userId/password', usersController.changePassword);
 
 
 module.exports = router;
