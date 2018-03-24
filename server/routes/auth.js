@@ -5,7 +5,7 @@ function extractUserData(user) {
   var returnJson = {};
   returnJson['data'] = {};
   returnJson['data']['userId']     = user['id'];
-  returnJson['data']['user_name']  = user['first_name'] + ' ' + user['last_name'];        
+  returnJson['data']['user_name']  = user['first_name'] + ' ' + user['last_name'];
   returnJson['data']['first_name'] = user['first_name'];
   returnJson['data']['last_name']  = user['last_name'];
   returnJson['data']['email']      = user['email'];
@@ -30,6 +30,8 @@ module.exports = (app, passport) => {
         returnJson.errors   = [];
         returnJson.message  = 'Log In Successful';
         returnJson.loggedIn = true;
+
+
         return res.status(200).json(returnJson);
       });
     })(req, res, next);
@@ -51,7 +53,22 @@ module.exports = (app, passport) => {
         returnJson.errors = [];
         returnJson.message = 'Sign Up Successful. User is logged in';
         returnJson.loggedIn = true;
-        return res.status(200).json(returnJson);
+
+        app.mailer.send('email', {
+          to: user['email'], // REQUIRED. This can be a comma delimited string just like a normal email to field.
+          subject: 'Thank you <3', // REQUIRED.
+          otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
+        }, function (err) {
+          if (err) {
+            // handle error
+            console.log(err);
+            res.send('There was an error sending the email');
+            return;
+          }
+          return res.status(200).json(returnJson);
+        });
+
+
       });
     })(req, res, next);
   });

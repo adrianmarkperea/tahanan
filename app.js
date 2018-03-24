@@ -11,6 +11,23 @@ const cors = require('cors');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
 
+const mailer = require('express-mailer');
+
+mailer.extend(app, {
+  from: 'The Tahanan Project',
+  host: 'smtp.gmail.com',
+  secureConnection: true,
+  port: 465,
+  transportMethod: 'SMTP',
+  auth: {
+    user: 'noreply.tahanan@gmail.com',
+    pass: 'joaneunicelao'
+  }
+})
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -61,13 +78,3 @@ app.get('*', (req, res) => {
 });
 
 module.exports = app;
-
-// TODO: Featured memories should be based off likes and comments (75% likes, 25% comments)
-// TODO: Users should be able to comment on memories
-// TODO: Fix responses
-
-// TODO: Document router.get('/:landmarkId/featured', memoriesController.getLandmarkFeaturedMemories);
-// TODO: Document router.get('/:memoryId/likes', memoriesController.getLikes);
-// TODO: Document router.post('/:memoryId/likes', memoriesController.like);
-// TODO: Document router.get('/:userId/memories', memoriesController.getUserMemories);
-// TODO: Document router.get('/:memoryId', memoriesController.retrieveMemory);
