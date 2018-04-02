@@ -56,7 +56,7 @@ module.exports = (app, passport) => {
 
         app.mailer.send('email', {
           to: user['email'], // REQUIRED. This can be a comma delimited string just like a normal email to field.
-          subject: 'Thank you <3', // REQUIRED.
+          subject: 'Welcome to Tahanan!', // REQUIRED.
           otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
         }, function (err) {
           if (err) {
