@@ -480,6 +480,7 @@ module.exports = {
     console.log(`User: ${req['user']}`);
     var returnJson = {};
     var selectedMemory;
+    var memoryComments;
     return Memory
       .findById(req.params.memoryId, {
         attributes: ['id', 'description', 'image_url', 'createdAt', 'featured'],
@@ -533,20 +534,49 @@ module.exports = {
           newLiker['last_name'] = liker['dataValues']['last_name'];
           returnJson['likers'].push(newLiker)
         })
-        // console.log(users);
         return selectedMemory
           .getCommenters()
       })
+      // .then(commenters => {
+      //   returnJson['comments'] = []
+      //   commenters.forEach(commenter => {
+      //     var newComment = {};
+      //     console.log(commenter['Comment'])
+      //     newComment['user_id'] = commenter['id']
+      //     // newComment['comment_id'] = commenter['Comment']['message']
+      //     newComment['user_name'] = commenter['first_name'] + ' ' + commenter['last_name']
+      //     newComment['profile_pic_url'] = commenter['profile_pic_url'];
+      //     newComment['timestamp'] = commenter['Comment']['createdAt'];
+      //     newComment['message'] = commenter['Comment']['message'];
+      //     returnJson['comments'].push(newComment)
+      //   })
+      //   returnJson['comment_count'] = returnJson['comments'].length;
+      //   res.status(200).json(returnJson);
+      // })
       .then(commenters => {
-        returnJson['comments'] = []
-        commenters.forEach(commenter => {
-          var newComment = {};
-          newComment['user_name'] = commenter['first_name'] + ' ' + commenter['last_name']
+        memoryCommenters = commenters;
+
+        return Comment
+          .findAll({
+            attributes: ['id', 'userId', 'memoryId', 'message', 'createdAt'],
+            where: { memoryId: selectedMemory['id']}
+          })
+      })
+      .then(comments => {
+        returnJson['comments'] = [];
+        console.log(comments);
+        for (let i = 0; i < comments.length; i++) {
+          let comment = comments[i]['dataValues'];
+          let commenter = memoryCommenters[i];
+          let newComment = {};
+          newComment['comment_id'] = comment['id'];
+          newComment['user_id'] = comment['userId'];
+          newComment['user_name'] = commenter['first_name'] + ' ' + commenter['last_name'];
           newComment['profile_pic_url'] = commenter['profile_pic_url'];
-          newComment['timestamp'] = commenter['Comment']['createdAt'];
-          newComment['message'] = commenter['Comment']['message'];
-          returnJson['comments'].push(newComment)
-        })
+          newComment['message'] = comment['message'];
+          newComment['timestamp'] = comment['createdAt'];
+          returnJson['comments'].push(newComment);
+        }
         returnJson['comment_count'] = returnJson['comments'].length;
         res.status(200).json(returnJson);
       })
