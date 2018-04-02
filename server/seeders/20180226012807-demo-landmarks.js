@@ -58,7 +58,62 @@ module.exports = {
           lng: '50.5107113',
           image_url: "http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/bahrain-international-circuit.mp4",
           name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/bahrain-international-circuit-calligraphy.png'
-        }
+        },
+        {
+          id: 'funland',
+          name: "Funland",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "MAN",
+          lat: '26.2342963',
+          lng: '50.5970956',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/funland.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/funland.png'
+        },
+        {
+          id: 'bahrain-national-museum',
+          name: "Bahrain National Museum",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "MAN",
+          lat: '26.241485',
+          lng: '50.5957062',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/bahrain-national-museum.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/bahrain-national-museum.png'
+        },
+        {
+          id: 'king-fahad-causeway',
+          name: "King Fahad Causeway",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "JAS",
+          lat: '26.1723882',
+          lng: '50.4558303',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/king-fahad-causeway.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/king-fahad-causeway.png'
+        },
+        {
+          id: 'philippine-school-bahrain',
+          name: "Philippine School Bahrain",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "ALI",
+          lat: '26.1552951',
+          lng: '50.5239343',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/philippine-school-bahrain.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/philippine-school-bahrain.png'
+        },
+        {
+          id: 'shaikh-isa-causeway',
+          name: "Shaikh Isa Causeway",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "MUH",
+          lat: '26.2534484',
+          lng: '50.5911795',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/shaikh-isa-causeway.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/shaikh-isa-causeway.png'
+        },
       ],
     {});
   },

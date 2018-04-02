@@ -16,24 +16,7 @@ module.exports = {
           image_url: '/image_store/landmarks/block-338.mp4'
         },
         // Landmarks in Gudaibiya-Capital
-        {
-          name: "Dasman Centre",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "GUD",
-          lat: '26.2268109',
-          lon: '50.5859564',
-          image_url: '/image_store/landmarks/dasman-centre.mp4'
-        },
-        {
-          name: "Gudaibiya Mosque",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "GUD",
-          lat: '26.2240711',
-          lon: '50.5859882',
-          image_url: '/image_store/landmarks/gudaibiya-mosque.mp4'
-        },
+
         {
           name: "Happy Town",
           createdAt: new Date(),
@@ -89,15 +72,6 @@ module.exports = {
           lat: '26.2334356',
           lon: '50.5516164',
           image_url: '/image_store/landmarks/city-centre-bahrain-cinema.mp4'
-        },
-        {
-          name: "Funland",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "MAN",
-          lat: '26.2342963',
-          lon: '50.5970956',
-          image_url: '/image_store/landmarks/funland.mp4'
         },
         {
           name: "Kids Kingdom",
@@ -184,15 +158,6 @@ module.exports = {
           image_url: '/image_store/landmarks/seef-mall.mp4'
         },
         // Landmarks in Shahab Avenue-Capital
-        {
-          name: "American Alley",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "SHA",
-          lat: '26.2116517',
-          lon: '50.6062597',
-          image_url: '/image_store/landmarks/american-alley.mp4'
-        },
         // Landmarks in Tubli-Capital
         {
           name: "Adhari Park",
@@ -316,15 +281,6 @@ module.exports = {
           image_url: '/image_store/landmarks/sacred-heart-school.mp4'
         },
         // Landmarks in Jebel Al Dukhan-South
-        {
-          name: "Tree of Life",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "JEB",
-          lat: '26.9941389',
-          lon: '50.580816',
-          image_url: '/image_store/landmarks/tree-of-life.mp4'
-        },
         // Landmarks in Nuwaidrat-SOUTH
         {
           name: "The Centre",
@@ -336,15 +292,6 @@ module.exports = {
           image_url: '/image_store/landmarks/the-centre.mp4'
         },
         // Landmarks in Sakhir-South
-        {
-          name: "Bahrain International Circuit",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "SAK",
-          lat: '26.0316048',
-          lon: '50.5107113',
-          image_url: '/image_store/landmarks/bahrain-international-circuit.mp4'
-        },
         {
           name: "Lost Paradise of Dilmun",
           createdAt: new Date(),
