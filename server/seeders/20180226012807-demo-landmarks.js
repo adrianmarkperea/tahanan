@@ -121,7 +121,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "TUB",
           lat: '26.1985329',
-          lon: '50.5430745',
+          lng: '50.5430745',
           image_url: '/image_store/landmarks/adhari-park.mp4',
           image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/adhari-park.mp4',
           name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/adhari-park-calligraphy.png'
