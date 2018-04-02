@@ -46,15 +46,7 @@ module.exports = {
           lon: '50.5832252',
           image_url: '/image_store/landmarks/andalus-garden.mp4'
         },
-        {
-          name: "Bahrain National Museum",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "MAN",
-          lat: '26.241485',
-          lon: '50.5957062',
-          image_url: '/image_store/landmarks/bahrain-national-museum.mp4'
-        },
+
         {
           name: "City Centre Bahrain",
           createdAt: new Date(),
@@ -159,15 +151,6 @@ module.exports = {
         },
         // Landmarks in Shahab Avenue-Capital
         // Landmarks in Tubli-Capital
-        {
-          name: "Adhari Park",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "TUB",
-          lat: '26.1985329',
-          lon: '50.5430745',
-          image_url: '/image_store/landmarks/adhari-park.mp4'
-        },
         /* MUHARRAQ */
         // Landmarks in Amwaj Islands-Muharraq
         {
@@ -180,27 +163,11 @@ module.exports = {
           image_url: '/image_store/landmarks/lagoon-park.mp4'
         },
         // Landmarks in Muharraq-Muhharaq
-        {
-          name: "Shaikhh Isa Causeway",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "MUH",
-          lat: '26.2534484',
-          lon: '50.5911795',
-          image_url: '/image_store/landmarks/shaikhh-isa-causeway.mp4'
-        },
+
 
         /* NORTH */
         // Landmarks in A'ali-North
-        {
-          name: "Philippine School Bahrain",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "ALI",
-          lat: '26.1552951',
-          lon: '50.5239343',
-          image_url: '/image_store/landmarks/philippine-school-bahrain.mp4'
-        },
+
         {
           name: "Ramli Mall",
           createdAt: new Date(),
@@ -221,15 +188,7 @@ module.exports = {
           image_url: '/image_store/landmarks/jawad-dome.mp4'
         },
         // Landmarks in Jasra-North
-        {
-          name: "King Fahad Causeway",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "JAS",
-          lat: '26.1723882',
-          lon: '50.4558303',
-          image_url: '/image_store/landmarks/king-fahad-causeway.mp4'
-        },
+
         // Landmarks in Salmabad-North
         {
           name: "AMA International University",
