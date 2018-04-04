@@ -10700,7 +10700,7 @@ var $details = modal.$wrapper.find(".details-bottom");
 
 var $profileImage = modal.$wrapper.find(".horizontal .left .icon");
 
-var $delete = jQuery('<div class="detail delete">\n  <div class="icon"></div>\n  <div class="text">Detele memory</div>\n</div>');
+var $delete = jQuery('<div class="detail delete">\n  <div class="icon"></div>\n  <div class="text">Delete memory</div>\n</div>');
 
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -10741,13 +10741,31 @@ modal.load = function (id) {
       modal.close();
     });
 
-    $profileImage.css("background-image", 'url(' + memory.profile_pic_url + ')');
+    $profileImage.css("background-image", 'url(' + (memory.profile_pic_url || "/img/user-pic.jpg") + ')');
 
     modal.$wrapper.find(".body").html(memory.content);
     var date = new Date(memory.date);
     modal.$wrapper.find(".date .text").html(months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear());
-    var image = memory.image != "none" ? '<img src="' + memory.image + '" />' : "";
-    modal.$wrapper.find(".image-wrapper").html(image);
+
+    if (memory.image != "none") {
+      var image = memory.image != "none" ? '<img src="' + memory.image + '" />' : "";
+      modal.$wrapper.find(".image-wrapper").removeClass("hidden").html(image);
+    } else {
+      modal.$wrapper.find(".image-wrapper").addClass("hidden");
+    }
+
+    var $likers = modal.$wrapper.find(".names-wrapper");
+    $likers.html("");
+    if (memory.likers.length > 0) {
+      modal.$wrapper.find(".likes-wrapper").addClass("visible");
+    } else {
+      modal.$wrapper.find(".likes-wrapper").removeClass("visible");
+    }
+    memory.likers.forEach(function (_ref) {
+      var first_name = _ref.first_name,
+          last_name = _ref.last_name;
+      return $likers.append('<div class="name">' + first_name + ' ' + last_name + '</div>');
+    });
 
     if (app.data.user.userId == memory.user_id) {
       $details.append($delete);
@@ -10798,7 +10816,7 @@ modal.load = function (id) {
 
     memory.comments.forEach(function (comment) {
       console.log(comment); //href="#/users/${comment.user_id}"
-      $comments.append('<div class="comment">\n        <div class="icon" style="background-image: url(' + comment.profile_pic_url + ')"></div>\n        <div class="text">\n          <a class="author" >' + comment.user_name + '</a>\n          <div class="message">' + comment.message + '</div>\n        </div>\n      </div>');
+      $comments.append('<div class="comment">\n        <div class="icon" style="background-image: url(' + (comment.profile_pic_url || "/img/user-pic.jpg") + ')"></div>\n        <div class="text">\n          <a class="author" >' + comment.user_name + '</a>\n          <div class="message">' + comment.message + '</div>\n        </div>\n      </div>');
 
       $comments.find(".author").on("click", function (e) {
         modal.close();
@@ -10848,6 +10866,17 @@ var $content = modal.$form.find("textarea[name=description]");
 var $image = modal.$form.find(".image-wrapper");
 var $file = modal.$form.find("input[type=file]");
 var $profileImage = modal.$wrapper.find(".horizontal .left .icon");
+var $body = modal.$wrapper.find(".body");
+
+var placeholders = ["Ano ang naaalala mo?", "What do you remember?", "Naalala ko pa noong..", "I remember when...", "Naalala ko noong dinadala ko pa ang mga anak ko dito", "I remember when I used to bring my children here.."];
+
+var placeholderIndex = 0;
+
+setInterval(function () {
+  $body.attr("placeholder", placeholders[placeholderIndex]);
+
+  placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+}, 4000);
 
 $file.on("change", function (e) {
   var element = e.target;
@@ -10931,6 +10960,8 @@ module.exports = function (memory) {
   content = content.length > limit ? content.substr(0, limit) + "..." : content;
 
   $memory.addClass(["texture-a", "texture-b", "texture-c"][Math.floor(Math.random() * 3)]);
+
+  $memory.addClass('font-' + Math.floor(Math.random() * 4));
 
   var liked = !!memory.liked;
   var likes = memory.likes || 0;
@@ -11105,6 +11136,7 @@ modal.open = function () {
   modal.show();
 
   user = app.data.user;
+  app.newUser = false;
 
   api("GET", 'users/' + app.data.user.userId).then(function (data) {
     var user = data.data;
@@ -11228,22 +11260,14 @@ app.on("ready", function (data) {
   if (!setPaths) {
     console.log("Set paths!");
     router.on({
-      // 'about': (params) => {
-      //   setTitle("About");
-      //   setView("about");
-      // },
-      // 'about/faq': (params) => {
-      //   setTitle("About");
-      //   setView("about-faq");
-      // },
-      // 'about/project': (params) => {
-      //   setTitle("About the Project");
-      //   setView("about");
-      // },
-      // 'about/content': (params) => {
-      //   setTitle("About");
-      //   setView("about-content");
-      // },
+      'about': function about(params) {
+        setTitle("About");
+        setView("about");
+      },
+      'about/faq': function aboutFaq(params) {
+        setTitle("About");
+        setView("about-faq");
+      },
       'me': function me(params) {
         if (!app.isLoggedIn()) {
           router.navigate("/");
@@ -11327,9 +11351,15 @@ jQuery(document).ready(function (e) {
     e.preventDefault();
   });
 
-  jQuery(".link-about, .link-about-project, .link-about-faq, .link-about-contact").click(function (e) {
-    modalTutorial.showTutorial("construction");
+  // jQuery(".link-about, .link-about-project, .link-about-faq").click(e => {
+  //   modalTutorial.showTutorial("construction");
+  //   e.preventDefault();
+  // });
+
+  jQuery(".link-about-contact").on("click", function (e) {
+    modalTutorial.showTutorial("contact");
     e.preventDefault();
+    return false;
   });
 
   jQuery("#view-map .btn-help").on("click", function (e) {
@@ -11343,9 +11373,25 @@ jQuery(document).ready(function (e) {
   jQuery("#view-user .btn-help").on("click", function (e) {
     modalTutorial.showTutorial("edit-profile");
   });
-});
 
-jQuery(window).on("load", function () {});
+  var _loop = function _loop(i) {
+    jQuery('#faq-category-' + i).on("click", function (e) {
+      for (var j = 0; j < 3; j++) {
+        if (i == j) {
+          jQuery('#faq-category-' + j).addClass("selected");
+          jQuery('#faq-page-' + j).addClass("visible");
+        } else {
+          jQuery('#faq-category-' + j).removeClass("selected");
+          jQuery('#faq-page-' + j).removeClass("visible");
+        }
+      }
+    });
+  };
+
+  for (var i = 0; i < 3; i++) {
+    _loop(i);
+  }
+});
 
 /***/ }),
 /* 15 */
@@ -11393,6 +11439,8 @@ GoogleMapsLoader.KEY = 'AIzaSyDEe21NT8x2Ie-504PHM57kRl3IfovW9-Y';
 
 var googleLoaded = false;
 
+var $options = jQuery("#view-map #options-wrapper");
+
 app.on("map-data", function (data) {
   mapData = data;
   if (!googleLoaded) googleLoaded = true;else return false;
@@ -11431,7 +11479,11 @@ app.on("map-data", function (data) {
       map.panTo(lastValidCenter);
     });
 
-    data.landmarks.forEach(function (landmark) {
+    data.landmarks.sort(function (a, b) {
+      a = a.name.toLowerCase();
+      b = b.name.toLowerCase();
+      return a < b ? -1 : a > b ? 1 : 0;
+    }).forEach(function (landmark) {
 
       var marker = new MarkerWithLabel({
         map: map,
@@ -11455,6 +11507,15 @@ app.on("map-data", function (data) {
         map.setCenter(marker.getPosition());
       });
 
+      marker.addListener("mouseover", function (e) {
+        marker.setTitle("fuck");
+      });
+      marker.addListener("mouseout", function (e) {
+        console.log("you");
+      });
+
+      console.log(marker.setTitle);
+
       marker.addListener('mouseover', function (e) {
         marker.setIcon({ url: 'img/marker-dark.png', scaledSize: markerSize });
       });
@@ -11462,6 +11523,13 @@ app.on("map-data", function (data) {
       marker.addListener('mouseout', function (e) {
         marker.setIcon({ url: 'img/marker-light.png', scaledSize: markerSize });
       });
+
+      var $option = jQuery('<div class="item">' + landmark.name + '</div>');
+      $option.on("click", function (e) {
+        map.setZoom(15);
+        map.setCenter(marker.getPosition());
+      });
+      $options.append($option);
     });
 
     // geocoder.geocode({
@@ -12140,6 +12208,7 @@ tutorials.push(new Tutorial(modal.$wrapper.find("#tutorial-map")));
 tutorials.push(new Tutorial(modal.$wrapper.find("#tutorial-featured")));
 tutorials.push(new Tutorial(modal.$wrapper.find("#tutorial-construction")));
 tutorials.push(new Tutorial(modal.$wrapper.find("#tutorial-edit-profile")));
+tutorials.push(new Tutorial(modal.$wrapper.find("#tutorial-contact")));
 
 /***/ }),
 /* 24 */
@@ -12321,7 +12390,7 @@ function load(userId) {
 
   api("GET", 'users/' + userId).then(function (data) {
     var user = data.data;
-    $image.css("background-image", 'url(' + user.image_url + ')');
+    $image.css("background-image", 'url(' + (user.image_url || "/img/user-pic.jpg") + ')');
     $name.html(user.user_name);
     $bio.html(user.bio);
 
