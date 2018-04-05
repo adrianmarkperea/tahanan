@@ -122,9 +122,63 @@ module.exports = {
           cityId: "TUB",
           lat: '26.1985329',
           lng: '50.5430745',
-          image_url: '/image_store/landmarks/adhari-park.mp4',
           image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/adhari-park.mp4',
           name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/adhari-park-calligraphy.png'
+        },
+        {
+          id: 'andalus-garden',
+          name: "Andalus Garden",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "MAN",
+          lat: '26.2223106',
+          lng: '50.5832252',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/andalus-garden.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/andalus-garden-calligraphy.png'
+        },
+        {
+          id: 'city-centre-bahrain',
+          name: "City Centre Bahrain",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "MAN",
+          lat: '26.2334356',
+          lng: '50.5516164',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/city-centre-bahrain.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/city-centre-bahrain-calligraphy.png'
+        },
+        {
+          id: 'lost-paradise-of-dilmun'
+          name: "Lost Paradise of Dilmun",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "SAK",
+          lat: '26.0134218',
+          lng: '50.5081713',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/lost-paradise-of-dilmun.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/lost-paradise-of-dilmun-calligraphy.png'
+        },
+        {
+          id: 'sacred-heart-church',
+          name: "Sacred Heart Church",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "MAN",
+          lat: '26.2270621',
+          lng: '50.5770884',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/sacred-heart-church.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/sacred-heart-church-calligraphy.png'
+        },
+        {
+          id: 'sacred-heart-school',
+          name: "Sacred Heart School",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "ISA",
+          lat: '26.2278663',
+          lng: '50.5777208',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/sacred-heart-school.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/sacred-heart-school-calligraphy.png'
         },
       ],
     {});
