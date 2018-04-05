@@ -148,7 +148,7 @@ module.exports = {
           name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/city-centre-bahrain-calligraphy.png'
         },
         {
-          id: 'lost-paradise-of-dilmun'
+          id: 'lost-paradise-of-dilmun',
           name: "Lost Paradise of Dilmun",
           createdAt: new Date(),
           updatedAt: new Date(),
