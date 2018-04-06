@@ -27,15 +27,7 @@ module.exports = {
           image_url: '/image_store/landmarks/happy-town.mp4'
         },
         // Landmarks in Juffair-Capital
-        {
-          name: "Juffair",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "JUF",
-          lat: '26.2128222',
-          lng: '50.5990161',
-          image_url: '/image_store/landmarks/juffair.mp4'
-        },
+
         // Landmarks in Manama-Capital
 
 

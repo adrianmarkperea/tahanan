@@ -190,7 +190,29 @@ module.exports = {
           lng: '50.4920527',
           image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/al-areen-park.mp4',
           name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/al-areen-park-calligraphy.png'
-        }
+        },
+        {
+          id: 'juffair',
+          name: "Juffair",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "JUF",
+          lat: '26.2128222',
+          lng: '50.5990161',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/juffair.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/juffair-calligraphy.png'
+        },
+        {
+          id: 'happy-town'
+          name: "Happy Town",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "GUD",
+          lat: '26.2268332',
+          lng: '50.5867041',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/happy-town.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/happy-town-calligraphy.png'
+        },
       ],
     {});
   },
