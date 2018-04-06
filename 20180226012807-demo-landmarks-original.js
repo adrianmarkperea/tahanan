@@ -17,15 +17,7 @@ module.exports = {
         },
         // Landmarks in Gudaibiya-Capital
 
-        {
-          name: "Happy Town",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "GUD",
-          lat: '26.2268332',
-          lng: '50.5867041',
-          image_url: '/image_store/landmarks/happy-town.mp4'
-        },
+        
         // Landmarks in Juffair-Capital
 
         // Landmarks in Manama-Capital

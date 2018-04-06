@@ -203,7 +203,7 @@ module.exports = {
           name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/juffair-calligraphy.png'
         },
         {
-          id: 'happy-town'
+          id: 'happy-town',
           name: "Happy Town",
           createdAt: new Date(),
           updatedAt: new Date(),
