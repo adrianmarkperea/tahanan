@@ -17,7 +17,7 @@ module.exports = {
         },
         // Landmarks in Gudaibiya-Capital
 
-        
+
         // Landmarks in Juffair-Capital
 
         // Landmarks in Manama-Capital
@@ -100,15 +100,7 @@ module.exports = {
           lng: '50.5370879',
           image_url: '/image_store/landmarks/magic-island-seef-mall.mp4'
         },
-        {
-          name: "Seef Mall",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "SEE",
-          lat: '26.2324762',
-          lng: '50.5347655',
-          image_url: '/image_store/landmarks/seef-mall.mp4'
-        },
+
         // Landmarks in Shahab Avenue-Capital
         // Landmarks in Tubli-Capital
         /* MUHARRAQ */

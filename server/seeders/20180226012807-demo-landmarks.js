@@ -213,6 +213,17 @@ module.exports = {
           image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/happy-town.mp4',
           name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/happy-town-calligraphy.png'
         },
+        {
+          id: 'seef-mall',
+          name: "Seef Mall",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "SEE",
+          lat: '26.2324762',
+          lng: '50.5347655',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/seef-mall.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/seef-mall-calligraphy.png'
+        },
       ],
     {});
   },
