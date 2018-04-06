@@ -180,6 +180,17 @@ module.exports = {
           image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/sacred-heart-school.mp4',
           name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/sacred-heart-school-calligraphy.png'
         },
+        {
+          id: 'al-areen-park',
+          name: "Al Areen Park",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          cityId: "ZAL",
+          lat: '26.0150286',
+          lng: '50.4920527',
+          image_url: 'http://res.cloudinary.com/higid3pm1/video/upload/v1521004159/landmarks/al-areen-park.mp4',
+          name_url: 'http://res.cloudinary.com/higid3pm1/image/upload/v1521005525/calligraphy/al-areen-park-calligraphy.png'
+        }
       ],
     {});
   },

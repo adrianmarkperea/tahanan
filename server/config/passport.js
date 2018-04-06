@@ -121,7 +121,7 @@ module.exports = (passport) => {
               email: email,
               password: encryptedPassword.passwordHash,
               salt: encryptedPassword.salt,
-              profile_pic_url: 'nada'
+              profile_pic_url: 'false'
             })
             .then(user => {
               return done(null, user);

@@ -12,7 +12,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "ADL",
           lat: '26.2121845',
-          lon: '50.5893802',
+          lng: '50.5893802',
           image_url: '/image_store/landmarks/block-338.mp4'
         },
         // Landmarks in Gudaibiya-Capital
@@ -23,7 +23,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "GUD",
           lat: '26.2268332',
-          lon: '50.5867041',
+          lng: '50.5867041',
           image_url: '/image_store/landmarks/happy-town.mp4'
         },
         // Landmarks in Juffair-Capital
@@ -33,36 +33,20 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "JUF",
           lat: '26.2128222',
-          lon: '50.5990161',
+          lng: '50.5990161',
           image_url: '/image_store/landmarks/juffair.mp4'
         },
         // Landmarks in Manama-Capital
-        {
-          name: "Andalus Garden",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "MAN",
-          lat: '26.2223106',
-          lon: '50.5832252',
-          image_url: '/image_store/landmarks/andalus-garden.mp4'
-        },
 
-        {
-          name: "City Centre Bahrain",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "MAN",
-          lat: '26.2334356',
-          lon: '50.5516164',
-          image_url: '/image_store/landmarks/city-centre-bahrain.mp4'
-        },
+
+
         {
           name: "City Centre Bahrain Cinema",
           createdAt: new Date(),
           updatedAt: new Date(),
           cityId: "MAN",
           lat: '26.2334356',
-          lon: '50.5516164',
+          lng: '50.5516164',
           image_url: '/image_store/landmarks/city-centre-bahrain-cinema.mp4'
         },
         {
@@ -71,7 +55,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "MAN",
           lat: '26.2353087',
-          lon: '50.5684011',
+          lng: '50.5684011',
           image_url: '/image_store/landmarks/kids-kingdom.mp4'
         },
         {
@@ -80,18 +64,10 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "MAN",
           lat: '26.2336362',
-          lon: '50.5501425',
+          lng: '50.5501425',
           image_url: '/image_store/landmarks/magic-planet.mp4'
         },
-        {
-          name: "Sacred Heart Church",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "MAN",
-          lat: '26.2270621',
-          lon: '50.5770884',
-          image_url: '/image_store/landmarks/block-338.mp4'
-        },
+
         // Landmarks in Salmaniya-Capital
         {
           name: "Water Garden",
@@ -99,7 +75,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "SALMANIYA",
           lat: '26.2207005',
-          lon: '50.5659974',
+          lng: '50.5659974',
           image_url: '/image_store/landmarks/water-garden.mp4'
         },
         // Landmarks in Sanabis-Capital
@@ -109,7 +85,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "SAN",
           lat: '26.2298608',
-          lon: '50.5402153',
+          lng: '50.5402153',
           image_url: '/image_store/landmarks/bahrain-international-exhibition-and-convention-centre.mp4'
         },
         {
@@ -118,7 +94,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "SAN",
           lat: '26.2301433',
-          lon: '50.5504225',
+          lng: '50.5504225',
           image_url: '/image_store/landmarks/dana-mall.mp4'
         },
         {
@@ -127,7 +103,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "SAN",
           lat: '26.229032',
-          lon: '50.5359134',
+          lng: '50.5359134',
           image_url: '/image_store/landmarks/geant-bahrain-mall.mp4'
         },
         // Landmarks in Seef-Capital
@@ -137,7 +113,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "SEE",
           lat: '26.2320886',
-          lon: '50.5370879',
+          lng: '50.5370879',
           image_url: '/image_store/landmarks/magic-island-seef-mall.mp4'
         },
         {
@@ -146,7 +122,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "SEE",
           lat: '26.2324762',
-          lon: '50.5347655',
+          lng: '50.5347655',
           image_url: '/image_store/landmarks/seef-mall.mp4'
         },
         // Landmarks in Shahab Avenue-Capital
@@ -159,7 +135,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "AMW",
           lat: '26.2878077',
-          lon: '50.6619913',
+          lng: '50.6619913',
           image_url: '/image_store/landmarks/lagoon-park.mp4'
         },
         // Landmarks in Muharraq-Muhharaq
@@ -174,7 +150,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "ALI",
           lat: '26.1630754',
-          lon: '50.5208689',
+          lng: '50.5208689',
           image_url: '/image_store/landmarks/ramli-mall.mp4'
         },
         // Landmarks in Barbar-North
@@ -184,7 +160,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "BAR",
           lat: '26.221367',
-          lon: '50.4871177',
+          lng: '50.4871177',
           image_url: '/image_store/landmarks/jawad-dome.mp4'
         },
         // Landmarks in Jasra-North
@@ -196,7 +172,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "SALMABAD",
           lat: '26.1841255',
-          lon: '50.518249',
+          lng: '50.518249',
           image_url: '/image_store/landmarks/ama-international-university.mp4'
         },
         /* SOUTH */
@@ -207,7 +183,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "AWA",
           lat: '26.091698',
-          lon: '50.5440194',
+          lng: '50.5440194',
           image_url: '/image_store/landmarks/awali-church.mp4'
         },
         // Landmarks in Hawar Islands-South
@@ -217,7 +193,7 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "HAW",
           lat: '26.667792',
-          lon: '50.5031119',
+          lng: '50.5031119',
           image_url: '/image_store/landmarks/hawar-islands.mp4'
         },
         // Landmarks in Isa Town-South
@@ -227,18 +203,10 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "ISA",
           lat: '26.1720124',
-          lon: '50.5472334',
+          lng: '50.5472334',
           image_url: '/image_store/landmarks/isa-town-mall.mp4'
         },
-        {
-          name: "Sacred Heart School",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "ISA",
-          lat: '26.2278663',
-          lon: '50.5777208',
-          image_url: '/image_store/landmarks/sacred-heart-school.mp4'
-        },
+
         // Landmarks in Jebel Al Dukhan-South
         // Landmarks in Nuwaidrat-SOUTH
         {
@@ -247,19 +215,11 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "NUW",
           lat: '26.1281529',
-          lon: '50.5877629',
+          lng: '50.5877629',
           image_url: '/image_store/landmarks/the-centre.mp4'
         },
         // Landmarks in Sakhir-South
-        {
-          name: "Lost Paradise of Dilmun",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "SAK",
-          lat: '26.0134218',
-          lon: '50.5081713',
-          image_url: '/image_store/landmarks/lost-paradise-of-dilmum.mp4'
-        },
+
         // Landmarks in Sitra-South
         {
           name: "Al Noor International School",
@@ -267,19 +227,11 @@ module.exports = {
           updatedAt: new Date(),
           cityId: "SIT",
           lat: '26.1676073',
-          lon: '50.6000535',
+          lng: '50.6000535',
           image_url: '/image_store/landmarks/al-noor-international-school.mp4'
         },
         // Landmarks in Zallaq-South
-        {
-          name: "Al Areen Park",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          cityId: "ZAL",
-          lat: '26.0150286',
-          lon: '50.4920527',
-          image_url: '/image_store/landmarks/al-areen-park.mp4'
-        }
+
       ],
     {});
   },
